@@ -1,7 +1,4 @@
 load("BaselineData.mat");
-% 
-% mouseID = data_dictionary{137};
-% session = mouseID{1,1};
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 disp("AttentionalSetsCompleted");

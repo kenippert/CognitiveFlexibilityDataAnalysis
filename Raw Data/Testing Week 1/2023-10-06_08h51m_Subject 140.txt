@@ -1,6 +1,6 @@
 File: C:\MED-PC\Data\2023-10-06_08h51m_Subject 140.txt
 
-
+
 Start Date: 10/06/23
 End Date: 10/06/23
 Subject: 140
@@ -598,7 +598,7 @@ Y:
 Z:
      0:        1.000        2.000        3.000        4.000
 
-
+
 Start Date: 10/06/23
 End Date: 10/06/23
 Subject: 140

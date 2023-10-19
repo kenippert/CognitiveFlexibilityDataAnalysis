@@ -12,7 +12,7 @@ trialperformance = calculateAverageTrialPerf(data_dictionary);
 disp("TrialPerformance");
 printDictionaryData(trialperformance);
 
-% helooo
+% hellooo
 latency = calculateAverage(data_dictionary,"Latency");
 disp("Latency");
 printDictionaryData(latency);

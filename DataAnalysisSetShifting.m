@@ -1,5 +1,8 @@
 load("BaselineData.mat");
 
+PortCorrectResponses = calculateAverage(data_dictionary,"CorrectResponses");
+disp("Left trials correct");
+printDictionaryData(PortCorrectResponses);
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 disp("AttentionalSetsCompleted");
 printDictionaryData(numberSetShifts);
@@ -58,7 +61,6 @@ function avgDict = calculateAverage(dictParam, key)
         end
     end
 end
-
 
 function semDict = calculateSEM(dictParam, key)
     
@@ -152,7 +154,6 @@ function avgDict = calculateAverageTrialPerf(dictParam)
         end
     end
 end
-
 
 function printDictionaryData(dict)
     % function that prints all data inside of a dictionary according

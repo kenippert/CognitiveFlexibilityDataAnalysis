@@ -1,8 +1,5 @@
-load("BaselineData.mat");
+load("TestingWeek1.mat");
 
-PortCorrectResponses = calculateAverage(data_dictionary,"CorrectResponses");
-disp("Left trials correct");
-printDictionaryData(PortCorrectResponses);
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 disp("AttentionalSetsCompleted");
 printDictionaryData(numberSetShifts);
@@ -62,6 +59,7 @@ function avgDict = calculateAverage(dictParam, key)
     end
 end
 
+
 function semDict = calculateSEM(dictParam, key)
     
     semDict = dictionary();
@@ -118,7 +116,8 @@ function avgDict = calculateAverageTrialPerf(dictParam)
 
         sessionArray = sessionDict(key);
         sessionArray = sessionArray{1};
-        for j = 1:length(sessionArray)
+        j = 1;
+        while true
             % gets the average of the sectionToCalculate (i.e.
             % TrialPerformance)
             averageArray = [];
@@ -129,31 +128,57 @@ function avgDict = calculateAverageTrialPerf(dictParam)
                 insideSession = sessionDict(key);
                 insideSession = insideSession{1};
 
-                if j <= length(insideSession)
+                if j < length(insideSession)
                     fprintf("Adding %d to the average\n", insideSession(j));
-                    averageArray(k) = insideSession(j);
+                    averageArray(length(averageArray) + 1) = insideSession(j);
                 end
+            end
+
+            % if averageArray is empty, then all of the elements that are
+            % not the final elements of the session lists have been
+            % averaged so break
+            if isempty(averageArray)
+                break;
             end
             fprintf("---------------\n");
-            tempArray = {};
-            % first check if avgDict is initialized otherwise will error
-            if isConfigured(avgDict)
-                % then check if specific part of avgDict is initialized
-                if isKey(avgDict, dictionaryKeys(i))
-                    tempArray = avgDict{dictionaryKeys(i)};
-                end
-            end
-            averageArray
-            % adding mean of sessionDict's session to Calculate to
-            % the end of temporary array so the index will be the same
-            tempArray{length(tempArray) + 1} = mean(...
-                averageArray, "omitnan");
-
-            % add new tempArray back to its spot in avgDict
-            avgDict{dictionaryKeys(i)} = tempArray;
+            avgNum = mean(averageArray, "omitnan");
+            avgDict = addToDict(avgNum, avgDict, dictionaryKeys(i));
+            j = j + 1;
         end
+        % get the average of all of the last elements and add to avgDict
+        averageArray = [];
+        for mouseSession = 1:length(mouseArray)
+
+            sessionDict = mouseArray(mouseSession);
+            sessionDict = sessionDict{1};
+
+            insideSession = sessionDict(key);
+            insideSession = insideSession{1};
+
+            averageArray(length(averageArray) + 1) = insideSession(end);
+        end
+        avgDict = addToDict(mean(averageArray, "omitnan"), avgDict, ...
+            dictionaryKeys(i));
     end
 end
+
+function averageWithoutElement = addToDict(avgToAdd, averageWithoutElement, mouseID)
+    tempArray = {};
+    % first check if avgDict is initialized otherwise will error
+    if isConfigured(averageWithoutElement)
+        % then check if specific part of avgDict is initialized
+        if isKey(averageWithoutElement, mouseID)
+            tempArray = averageWithoutElement{mouseID};
+        end
+    end
+    % adding mean of sessionDict's session to Calculate to
+    % the end of temporary array so the index will be the same
+    tempArray{length(tempArray) + 1} = avgToAdd;
+
+    % add new tempArray back to its spot in avgDict
+    averageWithoutElement{mouseID} = tempArray;
+end
+
 
 function printDictionaryData(dict)
     % function that prints all data inside of a dictionary according

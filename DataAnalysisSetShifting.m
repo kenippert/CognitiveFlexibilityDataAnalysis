@@ -1,8 +1,17 @@
-load("TestingWeek1.mat");
+load("BaselineData.mat");
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 disp("AttentionalSetsCompleted");
 printDictionaryData(numberSetShifts);
+
+numberTrials = calculateAverage(data_dictionary,"Trials");
+disp("Number of Trials By Session");
+printDictionaryData(numberTrials);
+
+numberNoInitiations = calculateAverage(data_dictionary,"NoInitiations");
+disp("Number of No Initiations Per Session");
+printDictionaryData(numberNoInitiations); 
+
 
 attentionalSetSEM = calculateSEM(data_dictionary,"AttentionalSetsCompleted");
 disp("AttentionalSetSEM");
@@ -12,7 +21,6 @@ trialperformance = calculateAverageTrialPerf(data_dictionary);
 disp("TrialPerformance");
 printDictionaryData(trialperformance);
 
-% hellooo
 latency = calculateAverage(data_dictionary,"Latency");
 disp("Latency");
 printDictionaryData(latency);
@@ -58,7 +66,6 @@ function avgDict = calculateAverage(dictParam, key)
         end
     end
 end
-
 
 function semDict = calculateSEM(dictParam, key)
     
@@ -178,7 +185,6 @@ function averageWithoutElement = addToDict(avgToAdd, averageWithoutElement, mous
     % add new tempArray back to its spot in avgDict
     averageWithoutElement{mouseID} = tempArray;
 end
-
 
 function printDictionaryData(dict)
     % function that prints all data inside of a dictionary according

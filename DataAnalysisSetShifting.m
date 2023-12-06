@@ -1,34 +1,95 @@
-load("BaselineData.mat");
+load("BaselineDataDREADDs.mat");
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
-disp("AttentionalSetsCompleted");
+fprintf("AttentionalSetsCompleted\n---------------\n");
 printDictionaryData(numberSetShifts);
 
 numberTrials = calculateAverage(data_dictionary,"Trials");
-disp("Number of Trials By Session");
+fprintf("Number of Trials By Session\n---------------\n");
 printDictionaryData(numberTrials);
 
 numberNoInitiations = calculateAverage(data_dictionary,"NoInitiations");
-disp("Number of No Initiations Per Session");
+fprintf("Number of No Initiations Per Session\n---------------\n");
 printDictionaryData(numberNoInitiations); 
 
+correctResponsesByRP = calculateAverageTTC(data_dictionary,"CorrectResponses");
+fprintf("Correct Responses\n---------------\nTotalCorrect " + "LeftCorrect " + "RightCorrect\n");
+printDictionaryData(correctResponsesByRP); 
 
-attentionalSetSEM = calculateSEM(data_dictionary,"AttentionalSetsCompleted");
-disp("AttentionalSetSEM");
-printDictionaryData(attentionalSetSEM);
+incorrectResponsesByRP = calculateAverageTTC(data_dictionary,"IncorrectResponses");
+fprintf("Incorrect Responses\n---------------\nTotalIncorrect " + "LeftIncorrect " + "RightIncorrect\n");
+printDictionaryData(incorrectResponsesByRP); 
 
-trialperformance = calculateAverageTrialPerf(data_dictionary);
-disp("TrialPerformance");
-printDictionaryData(trialperformance);
+trialsToCriterion = calculateAverageTTC(data_dictionary,"TrialsToCriterion");
+fprintf("Trials To Criterion\n---------------\nCorrectCD " + "IncCD " + "CorrectID1 " + "IncID1 " + "CorrectED1 " + "IncED1");
+printDictionaryData(trialsToCriterion);
 
 latency = calculateAverage(data_dictionary,"Latency");
-disp("Latency");
+fprintf("Latency\n---------------\n");
 printDictionaryData(latency);
 
-latencySEM = calculateSEM(data_dictionary,"Latency");
-disp("latencySEM");
-printDictionaryData(latencySEM);
+TBTP = trialType(data_dictionary,"TrialByTrialPerformance","LeftTrials", "RightTrials");
 
+
+ 
+% latencySEM = calculateSEM(data_dictionary,"Latency");
+% disp("latencySEM");
+% printDictionaryData(latencySEM);
+
+function  trialTypeDict = trialType(dictParam, key, key2, key3)
+    trialTypeDict = dictionary();
+    dictionaryKeys = keys(dictParam);
+
+    for i = 1:size(dictionaryKeys)
+        mouseID = dictParam{dictionaryKeys(i)};
+        Sessions = size(mouseID);
+        numberOfSessions = Sessions(2);
+            %go inside a session
+            sessionDict = dictionary();
+            
+            for j = 1:numberOfSessions
+                CorrectSound = 0;
+                IncSound = 0;
+                CorrectLight = 0;
+                IncLight = 0;
+
+                session = mouseID{j};
+                field = session{key};
+                field2 = session{key2};
+                field3 = session{key3};
+
+                fieldDimensions = size(field);
+
+                sessionLength = fieldDimensions(2);
+                    % disp(k);
+                for k = 1:sessionLength
+                    if mod(field(k),2) == 0 && (field2(k) == 2 || field3(k) == 2)
+                        IncLight = IncLight + 1;
+                    elseif mod(field(k),2) ~= 0 && (field2(k) == 2 || field3(k) == 2)
+                        CorrectLight = CorrectLight + 1;
+                    elseif mod(field(k),2) == 0 && (field2(k) == 1 || field3(k) == 1)
+                        IncSound = IncSound + 1;
+                    elseif mod(field(k),2) ~= 0 && (field2(k) == 1 || field3(k) == 1)
+                        CorrectSound = CorrectSound + 1;
+                    end
+                    dictFields = ["CorrectLight","IncLight", "CorrectSound", "IncSound"];
+                    dictValues = [CorrectLight, IncLight, CorrectSound, IncSound];
+                    sessionDict{j} = dictionary(dictFields, dictValues);
+                    % sessionStr = string(sessionLength);
+                    trialTypeDictKeys{j} = j;
+                    trialTypeDictValues{j} = sessionDict{j};
+                end
+            fprintf("Mouse " + dictionaryKeys(i) + "\n")
+            fprintf("Session " + j);
+            trialTypeDict{dictionaryKeys(i)} = dictionary(trialTypeDictKeys{j},trialTypeDictValues{j});
+            disp(trialTypeDict{dictionaryKeys(i)}(j));
+            end
+       
+        % trialTypeDict{dictionaryKdeys(i)} = tempArray; 
+        
+    end
+
+end
 
 function avgDict = calculateAverage(dictParam, key)
     
@@ -104,9 +165,8 @@ function semDict = calculateSEM(dictParam, key)
     end
 end
 
-function avgDict = calculateAverageTrialPerf(dictParam)
+function avgDict = calculateAverageTTC(dictParam, key)
 
-    key = "TrialPerformance";
     
     avgDict = dictionary();
     % gets the dictionary keys for the dictionary
@@ -136,7 +196,7 @@ function avgDict = calculateAverageTrialPerf(dictParam)
                 insideSession = insideSession{1};
 
                 if j < length(insideSession)
-                    fprintf("Adding %d to the average\n", insideSession(j));
+                    % fprintf("Adding %d to the average\n", insideSession(j));
                     averageArray(length(averageArray) + 1) = insideSession(j);
                 end
             end
@@ -147,7 +207,7 @@ function avgDict = calculateAverageTrialPerf(dictParam)
             if isempty(averageArray)
                 break;
             end
-            fprintf("---------------\n");
+            % fprintf("---------------\n");
             avgNum = mean(averageArray, "omitnan");
             avgDict = addToDict(avgNum, avgDict, dictionaryKeys(i));
             j = j + 1;
@@ -199,7 +259,7 @@ function printDictionaryData(dict)
             data = mouseArray(j);
             data = data{1};
 
-            fprintf("%d,",data);
+            fprintf("%d  ",data);
         end
         fprintf("]\n");
     end

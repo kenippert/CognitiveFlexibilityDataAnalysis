@@ -1,6 +1,6 @@
 %Open JSON data files and save as structures for each mouse 
 
-data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\CognitiveFlexibility x ACC DREADDs\DataAnalysis\DREADDsACCRawData\Vehicle Injection");
+data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\CognitiveFlexibility x ACC DREADDs\DataAnalysis\DREADDsACCRawData\Baseline Data\BaselineNOtAnalysisYet\KN23002");
 
 CF_data = dir(data_files +"\*.json");
 
@@ -58,5 +58,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('VehicleDataDREADDs.mat', "data_dictionary");
+save('KN23002BaselineDataDREADDs.mat', "data_dictionary");
  

@@ -1,4 +1,4 @@
-load("KN23002BaselineDataDREADDs.mat");
+load("BaselineDataDREADDsACCxCFC2.mat");
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 fprintf("AttentionalSetsCompleted\n---------------\n");
@@ -30,11 +30,6 @@ printDictionaryData(latency);
 
 TBTP = trialType(data_dictionary,"TrialByTrialPerformance","LeftTrials", "RightTrials", "LightStimuli", "SoundStimuli");
 
-
- 
-% latencySEM = calculateSEM(data_dictionary,"Latency");
-% disp("latencySEM");
-% printDictionaryData(latencySEM);
 
 function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
     trialTypeDict = dictionary();
@@ -138,26 +133,6 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                     CorrectSound = CorrectSoundED2 + CorrectSoundID2 + CorrectSoundED1 + CorrectSoundID1 + CorrectSoundCD;
                     IncSound = IncSoundED2 + IncSoundID2 + IncSoundED1 + IncSoundID1 + IncSoundCD;
 
-                    dictFields = ["CorrectLightCD","IncLightCD", "CorrectSoundCD", "IncSoundCD" ... 
-                        "CorrectLightID1","IncLightID1", "CorrectSoundID1", "IncSoundID1" ...
-                        "CorrectLightED1","IncLightED1", "CorrectSoundED1", "IncSoundED1" ...
-                        "CorrectLightID2","IncLightID2", "CorrectSoundID2", "IncSoundID2" ...
-                        "CorrectLightED2","IncLightED2", "CorrectSoundED2", "IncSoundED2" ...
-                        "Total Correct Light", "Total Incorrect Light" , "Total Correct Sound", "Total Incorrect Sound", ...
-                        "RedCorrect", "RedIncorrect", "YellowCorrect", "YellowIncorrect", "GreenCorrect", "GreenIncorrect", "BlueCorrect", ...
-                        "BlueIncorrect", "WhiteCorrect", "WhiteIncorrect", "PurpleCorrect","PurpleIncorrect"];
-                    
-                    dictValues = [CorrectLightCD, IncLightCD, CorrectSoundCD, IncSoundCD ...
-                        CorrectLightID1, IncLightID1, CorrectSoundID1, IncSoundID1 ...
-                        CorrectLightED1, IncLightED1, CorrectSoundED1, IncSoundED1 ...
-                        CorrectLightID2, IncLightID2, CorrectSoundID2, IncSoundID2 ...
-                        CorrectLightED2, IncLightED2, CorrectSoundED2, IncSoundED2 ...
-                        CorrectLight, IncLight, CorrectSound, IncSound, ...
-                        redCorrect, redInc, yellowCorrect, yellowInc, greenCorrect, greenInc ...
-                        blueCorrect, blueInc, whiteCorrect, whiteInc, purpleCorrect, purpleInc];
-                    sessionDict{j} = dictionary(dictFields, dictValues);
-                    trialTypeDictKeys{j} = j;
-                    trialTypeDictValues{j} = sessionDict{j};
 
                     %%TRIAL BY TRIAL PERFORMANCE BASED ON STIMULUS
                     %if the trial had a stimuli and the response was
@@ -170,11 +145,16 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                     purpleCorrect = 0;
 
                     redInc = 0;
-                    yellowInc = 0
+                    yellowInc = 0;
                     greenInc = 0;
-                    blueInc = 0
+                    blueInc = 0;
                     whiteInc = 0;
                     purpleInc = 0;
+
+                    %if trial performance is non NaN & an odd number AND it
+                    %is a left or right trial light trial (O or J =2) and
+                    %it has the unique light stimuli identifier
+                    %(1,2,3,4,5,6)
                     if (~isnan(field(k)) && mod(field(k),2) ~= 0) && (field2(k) ==2 || field3(k) ==2) && field4(k) ==1
                         redCorrect = redCorrect + 1;
                     elseif field4(k) == 2
@@ -202,6 +182,80 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                     elseif field4(k) == 6
                         purpleInc = purpleInc + 1;
                     end
+                    %initialize variables for number of correct and
+                    %incorrect responses on each sound stimuli, number in
+                    %variable name refers to the frequency in kHz
+                    twoCorrect = 0;
+                    fiveCorrect =0;
+                    twelveCorrect = 0;
+                    nineCorrect = 0;
+                    fifteenCorrect = 0;
+                    twentyCorrect = 0;
+
+                    twoInc = 0;
+                    fiveInc = 0;
+                    twelveInc = 0;
+                    nineInc = 0;
+                    fifteenInc = 0;
+                    twentyInc = 0;
+
+                    %if trial performance is non NaN & an odd number AND it
+                    %is a left or right trial SOUND trial (O or I =1) and
+                    %it has the unique sound stimuli identifier
+                    %(1,2,3,4,5,6)
+                    if (~isnan(field(k)) && mod(field(k),2) ~= 0) && (field2(k) ==1 || field3(k) ==1) && field5(k) ==1
+                        twoCorrect = twoCorrect + 1;
+                    elseif field5(k) == 2
+                        fiveCorrect = fiveCorrect +1;
+                    elseif field5(k) == 3
+                        twelveCorrect = twelveCorrect +1;
+                    elseif field5(k) == 4
+                        nineCorrect = nineCorrect + 1;
+                    elseif field5(k) == 5
+                        fifteenCorrect = fifteenCorrect + 1;
+                    elseif field5(k) == 6
+                        twentyCorrect = twentyCorrect + 1;
+                    end
+                    %Check for incorrect sound responses
+                    if (~isnan(field(k)) && mod(field(k),2) == 0) && (field2(k) ==1 || field3(k) ==1) && field5(k) ==1
+                        twoInc = twoInc + 1;
+                    elseif field5(k) == 2
+                        fiveInc = fiveInc +1;
+                    elseif field5(k) == 3
+                        twelveInc = twelveInc +1;
+                    elseif field5(k) == 4
+                        nineInc = nineInc+ 1;
+                    elseif field5(k) == 5
+                        fifteenInc = fifteenInc + 1;
+                    elseif field5(k) == 6
+                        twentyInc = twentyInc + 1;
+                    end                 
+
+                    dictFields = ["CorrectLightCD","IncLightCD", "CorrectSoundCD", "IncSoundCD" ... 
+                        "CorrectLightID1","IncLightID1", "CorrectSoundID1", "IncSoundID1" ...
+                        "CorrectLightED1","IncLightED1", "CorrectSoundED1", "IncSoundED1" ...
+                        "CorrectLightID2","IncLightID2", "CorrectSoundID2", "IncSoundID2" ...
+                        "CorrectLightED2","IncLightED2", "CorrectSoundED2", "IncSoundED2" ...
+                        "Total Correct Light", "Total Incorrect Light" , "Total Correct Sound", "Total Incorrect Sound", ...
+                        "RedCorrect", "RedIncorrect", "YellowCorrect", "YellowIncorrect", "GreenCorrect", "GreenIncorrect", "BlueCorrect", ...
+                        "BlueIncorrect", "WhiteCorrect", "WhiteIncorrect", "PurpleCorrect","PurpleIncorrect" ...
+                        "2kHzCorrect","2kHzInc", "5kHzCorrect","5kHzInc", "12kHzCorrect","12kHzInc" ...
+                        "9kHz Correct","9kHzInc", "15kHzCorrect","15kHzInc","20kHzCorrect", "20kHzInc"];
+                    
+                    dictValues = [CorrectLightCD, IncLightCD, CorrectSoundCD, IncSoundCD ...
+                        CorrectLightID1, IncLightID1, CorrectSoundID1, IncSoundID1 ...
+                        CorrectLightED1, IncLightED1, CorrectSoundED1, IncSoundED1 ...
+                        CorrectLightID2, IncLightID2, CorrectSoundID2, IncSoundID2 ...
+                        CorrectLightED2, IncLightED2, CorrectSoundED2, IncSoundED2 ...
+                        CorrectLight, IncLight, CorrectSound, IncSound, ...
+                        redCorrect, redInc, yellowCorrect, yellowInc, greenCorrect, greenInc ...
+                        blueCorrect, blueInc, whiteCorrect, whiteInc, purpleCorrect, purpleInc ...
+                        twoCorrect, twoInc, fiveCorrect, fiveInc, twelveCorrect, twelveInc ...
+                        nineCorrect, nineInc, fifteenCorrect, fifteenInc, twentyCorrect, twentyInc];
+
+                    sessionDict{j} = dictionary(dictFields, dictValues);
+                    trialTypeDictKeys{j} = j;
+                    trialTypeDictValues{j} = sessionDict{j};
                     
 
                 end

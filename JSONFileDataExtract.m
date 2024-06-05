@@ -1,16 +1,17 @@
 %Open JSON data files and save as structures for each mouse 
-
-data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\DREADDsACC x CognitiveFlex Cohort 2\Baseline Sessions Raw Data");
-
+%folder path with JSON files that you want
+data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\DREADDsACC X CognitiveFlex Cohort 2\Baseline Session Raw Data GFP Mice");
+%create directory
 CF_data = dir(data_files +"\*.json");
-
+%empty dictionary
 data_dictionary = dictionary();
-
+%initialize list for subject numbers
 subject_number_list = [];
+
 
 for i=1:length(CF_data)
     CF_data(i).name
-    
+    %using name of the file, split by 
     split_by_space = split(CF_data(i).name);
     split_by_period = split(split_by_space(2), '.');
     name_of_subject = split_by_period(1);
@@ -30,15 +31,10 @@ for i=1:length(CF_data)
     fields = ["Timer", "Trials", "NoInitiations", "CorrectResponses",...
         "IncorrectResponses","TrialByTrialPerformance", "TrialsToCriterion", "AttentionalSetsCompleted",...
         "MissedResponses", "LeftTrials", "RightTrials", "Latency", ...
-        "TrialbyTrialStimulus", "LightStimuli","SoundStimuli"];
+        "TrialbyTrialStimulus", "LightStimuli","SoundStimuli","TrialTypeIdentifier"];
     %groups counts output array order is 0, .... N, NaN
     values = {data.T, data.I, data.N, data.G.', data.W.',data.H.', groupcounts(data.H), data.V,...
-        data.M.', data.J.', data.O.', data.D.', data.F.', data.L.', data.S.'};
-
-    % char_array = 'hello world';
-    % char_array = ['h','e','l','l','o',...]
-    % SAME THING
-
+        data.M.', data.J.', data.O.', data.D.', data.F.', data.L.', data.S.', data.R.'};
     check_fields_values_same_dim = length(fields) == length(values);
     
     temp_dictionary = dictionary(fields, values);
@@ -58,5 +54,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('BaselineDataDREADDsACCxCFC2', "data_dictionary");
+save('TestingDataFormatting', "data_dictionary");
  

@@ -1,4 +1,4 @@
-load("BaselineDataDREADDsACCxCFC2.mat");
+load("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 1 Raw Data AIRNS\Test1AIRNSxCFC2.mat");
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 fprintf("AttentionalSetsCompleted\n---------------\n");
@@ -58,7 +58,7 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                 field3 = session{key3};
                 %Light Stimuli trials
                 field4 = session{key4};
-                %Right stimuli trials
+                %Sound stimuli trials
                 field5 = session{key5};
                 
                 fieldDimensions = size(field);

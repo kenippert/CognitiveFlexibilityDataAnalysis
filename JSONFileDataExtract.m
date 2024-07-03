@@ -1,6 +1,6 @@
 %Open JSON data files and save as structures for each mouse 
 %folder path with JSON files that you want
-data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\DREADDsACC X CognitiveFlex Cohort 2\Baseline Session Raw Data GFP Mice");
+data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 1 Raw Data");
 %create directory
 CF_data = dir(data_files +"\*.json");
 %empty dictionary
@@ -54,5 +54,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('TestingDataFormatting', "data_dictionary");
+save('Test1DataCIECFCohort2', "data_dictionary");
  

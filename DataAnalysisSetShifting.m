@@ -1,4 +1,6 @@
-load("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 1 Raw Data AIRNS\Test1AIRNSxCFC2.mat");
+clear
+clc
+load("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 2 Raw Data\Test2DataCIECFCohort2.mat");
 
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 fprintf("AttentionalSetsCompleted\n---------------\n");

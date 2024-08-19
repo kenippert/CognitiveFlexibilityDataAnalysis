@@ -1,8 +1,10 @@
 %Open JSON data files and save as structures for each mouse 
 %folder path with JSON files that you want
-data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 1 Raw Data");
-%create directory
-CF_data = dir(data_files +"\*.json");
+clear
+clc
+%import and organize every file within a selcted folder  
+datapath=uigetdir([],'Select Data Directory'); 
+CF_data=dir(fullfile(datapath,'*.json'));
 %empty dictionary
 data_dictionary = dictionary();
 %initialize list for subject numbers
@@ -54,5 +56,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('Test1DataCIECFCohort2', "data_dictionary");
+save('DCZDataDREADDACCxCFC2.mat', "data_dictionary");
  

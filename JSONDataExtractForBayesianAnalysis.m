@@ -2,11 +2,11 @@
 
 clear
 clc
-
-%folder path with JSON files that you want
-data_files = ("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\DREADDsACC X CognitiveFlex Cohort 2\Baseline Sessions Raw Data DREADD Mice");
+%import and organize every file within a selcted folder  
+datapath=uigetdir([],'Select Data Directory'); 
+CF_data=dir(fullfile(datapath,'*.json'));
 %create directory
-CF_data = dir(data_files +"\*.json");
+%CF_data = dir(data_files +"\*.json");
 %empty dictionary
 data_structure = {};
 subject_number_in_data_structure = containers.Map('KeyType','int32','ValueType','int32');
@@ -22,18 +22,19 @@ for i=1:length(CF_data)
     name_of_subject = split_by_period(1);
     name_of_subject = str2num(cell2mat(name_of_subject));
     
-    date = {};
-    subject = {};
+    dateTable = {};
+    subjectTable = {};
     box = {};
     timer = {};
     trials = {};
-    trialByTrialPerformance = {};
-    lightStimuli = {};
-    soundStimuli = {};
-    trialTypeID = {};
+    %trialByTrialPerformance = {};
+    %lightStimuli = {};
+    %soundStimuli = {};
+    %trialTypeID = {};
+    concatenatedData = {};
 
     if ~isKey(subject_number_in_data_structure, name_of_subject)
-        data_structure{ end + 1 } = table(date,subject,box,timer,trials,trialByTrialPerformance, lightStimuli, soundStimuli, trialTypeID);
+        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
     f = fopen(CF_data(i).name,'r+');
@@ -49,33 +50,38 @@ for i=1:length(CF_data)
         data.(fn1) = array;
     end
     %add start date field to structure using same format as below
-    field1 = 'Date'; date = {data.StartDate};
-    field2 = 'Subject'; subject = {data.Subject};
-    field3 = 'Box'; box = {data.Box};
-    field4 = 'Timer'; timer = {data.T};
-    field5 = 'Trials'; trials = {data.I};
-    field6 = "TrialByTrialPerformanceStage"; trialByTrialPerformance = {data.H}; 
-    field7 = "LightStimuli"; lightStimuli = {data.L};
-    field8 = 'SoundStimuli'; soundStimuli = {data.S};
-    field9 = 'TrialTypeIdentifier'; trialTypeID = {data.R};
     
-    newTable = table(date,subject,box,timer,trials,trialByTrialPerformance, lightStimuli, soundStimuli, trialTypeID);
-    data_structure{subject_number_in_data_structure(name_of_subject)} = [data_structure{subject_number_in_data_structure(name_of_subject)};newTable];
-    % temp_structure = struct(field1,value1,field2,value2,field3,value3, field4,value4,field5,value5,field6,value6,field7,value7);
+    dateStr = data.StartDate;
+    dateObj = datetime(dateStr, 'InputFormat', 'MM/dd/yy');
+    dateNum = datenum(dateObj);
+    date_fill_value = dateNum;
+    length_of_array = numel(data.H);
+    %replicate date_fill_value until it matches the length of the session,
+    %so this should result in a date value for each trial of a session in a
+    %ntrials x 1 array
+    date = repmat(date_fill_value, length_of_array, 1);
 
- % [Session 1 struct, session 2 struct, session 3 struct, ...];
-    %if ismember(name_of_subject, subject_number_list)
-    %    disp("if");
-    %    subject_x_list = data_structure.(name_of_subject);
-    %else
-    %    disp("else")
-    %    subject_x_list = {};
-    %    subject_number_list(length(subject_number_list) + 1) = ...
-    %        name_of_subject;
-    %end
-    %fprintf("appending to the end of the list\nlength of list: %d\n",numel(subject_x_list));
-    %subject_x_list{end + 1} = temp_structure;
-    %setfield(data_structure,name_of_subject, subject_x_list);
+    %repeat with the subject number 
+    subject_fill_value = data.Subject;
+    subject = repmat(subject_fill_value, length_of_array, 1);
+    dateTable = {data.StartDate}; 
+    subjectTable = {data.Subject}; 
+    box = {data.Box};
+    timer = {data.T};
+    trials = {data.I};
+    trialByTrialPerformance = {data.H}; 
+    lightStimuli = {data.L};
+    soundStimuli = {data.S};
+    trialTypeID = {data.R};
+    
+    %concatenate trial by trial data, light stimuli, sound stimuli, and
+    %trial type
+    %need to figure out how to label these columns TBTP, LightStim,
+    %SoundStim, TrialType
+    concatenatedData = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
+    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
+    data_structure{subject_number_in_data_structure(name_of_subject)} = [data_structure{subject_number_in_data_structure(name_of_subject)};newTable];
+    output = concatenatedData;
 end
 % 
 % 

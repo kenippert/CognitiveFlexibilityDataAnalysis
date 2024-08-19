@@ -1,7 +1,6 @@
 clear
 clc
-load("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\Cognitive Flexibility x CIE Cohort 2\Test 2 Raw Data\Test2DataCIECFCohort2.mat");
-
+load("C:\Users\katyn\Desktop\Lab Work\Cognitive Flexibility\DREADDsACC x CognitiveFlex Cohort 2\Baseline Sessions Raw Data DREADD mice\BaselineDataDREADDACCxCFC2.mat");
 numberSetShifts = calculateAverage(data_dictionary,"AttentionalSetsCompleted");
 fprintf("AttentionalSetsCompleted\n---------------\n");
 printDictionaryData(numberSetShifts);
@@ -34,6 +33,7 @@ TBTP = trialType(data_dictionary,"TrialByTrialPerformance","LeftTrials", "RightT
 
 
 function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
+
     trialTypeDict = dictionary();
     dictionaryKeys = keys(dictParam);
 
@@ -50,6 +50,14 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                 CorrectSoundED1 = 0; IncSoundED1 = 0;CorrectLightED1 = 0;IncLightED1 = 0;
                 CorrectSoundID2 = 0;IncSoundID2 = 0; CorrectLightID2 = 0; IncLightID2 = 0;
                 CorrectSoundED2 = 0;IncSoundED2 = 0;CorrectLightED2 = 0;IncLightED2 = 0;
+                    %%TRIAL BY TRIAL PERFORMANCE BASED ON STIMULUS
+                    %if the trial had a stimuli and the response was
+                    %correct (odd numbers)
+                redCorrect = 0; yellowCorrect =0; greenCorrect = 0; blueCorrect = 0; whiteCorrect = 0; purpleCorrect = 0;
+                redInc = 0; yellowInc = 0; greenInc = 0; blueInc = 0; whiteInc = 0; purpleInc = 0;
+               
+                twoCorrect = 0; fiveCorrect =0; twelveCorrect = 0; nineCorrect = 0; fifteenCorrect = 0; twentyCorrect = 0;
+                twoInc = 0; fiveInc = 0; twelveInc = 0; nineInc = 0; fifteenInc = 0; twentyInc = 0;
 
                 session = mouseID{j};
                 %Trial by trial performance
@@ -136,22 +144,6 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                     IncSound = IncSoundED2 + IncSoundID2 + IncSoundED1 + IncSoundID1 + IncSoundCD;
 
 
-                    %%TRIAL BY TRIAL PERFORMANCE BASED ON STIMULUS
-                    %if the trial had a stimuli and the response was
-                    %correct (odd numbers)
-                    redCorrect = 0;
-                    yellowCorrect =0;
-                    greenCorrect = 0;
-                    blueCorrect = 0;
-                    whiteCorrect = 0;
-                    purpleCorrect = 0;
-
-                    redInc = 0;
-                    yellowInc = 0;
-                    greenInc = 0;
-                    blueInc = 0;
-                    whiteInc = 0;
-                    purpleInc = 0;
 
                     %if trial performance is non NaN & an odd number AND it
                     %is a left or right trial light trial (O or J =2) and
@@ -187,19 +179,6 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
                     %initialize variables for number of correct and
                     %incorrect responses on each sound stimuli, number in
                     %variable name refers to the frequency in kHz
-                    twoCorrect = 0;
-                    fiveCorrect =0;
-                    twelveCorrect = 0;
-                    nineCorrect = 0;
-                    fifteenCorrect = 0;
-                    twentyCorrect = 0;
-
-                    twoInc = 0;
-                    fiveInc = 0;
-                    twelveInc = 0;
-                    nineInc = 0;
-                    fifteenInc = 0;
-                    twentyInc = 0;
 
                     %if trial performance is non NaN & an odd number AND it
                     %is a left or right trial SOUND trial (O or I =1) and
@@ -270,7 +249,6 @@ function  trialTypeDict = trialType(dictParam, key, key2, key3, key4, key5)
     end
 
 end
-
 function avgDict = calculateAverage(dictParam, key)
     
     avgDict = dictionary();

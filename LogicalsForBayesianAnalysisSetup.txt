@@ -1,0 +1,24 @@
+Logicals for left or right side in the trial by trial data:
+
+if trial type is light, and light is odd, and H is correct, side choice = left
+
+if trial type is light, and light is odd, and H is incorrect, side choice = right
+
+if trial type is sound, and sound is odd, and H is correct, side choice = left
+
+if trial type is sound, and sound is odd, and H is incorrect, side choice = right
+
+
+
+if r = 2 (light trial), light stimuli is odd, and H is correct, then side choice is left
+if light stimulus is even, and H is correct, then side choice is right
+
+
+
+if r = 1 (sound trial), sound stimulus is odd, and H is correct, then side choice is left
+
+if r = 1, sound stimulus is odd, and H is incorrect, then side choice is right
+
+
+WHICH STIMULUS DID THEY FOLLOW
+If it is a light trial, and the light meant left, and the sound meant right

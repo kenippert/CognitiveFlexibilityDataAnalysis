@@ -1,0 +1,9 @@
+idx = H == 0;
+H(idx) = [];
+
+putt the correct under sound rule and correct under light rule (unique column did they follow light or not did they follow sound or not)
+
+phase, side chosen, light, sound
+
+make sure things are accessed correctly
+Bayesian analysis script tells the order of events for the analysis

@@ -31,10 +31,10 @@ for i=1:length(CF_data)
     %lightStimuli = {};
     %soundStimuli = {};
     %trialTypeID = {};
-    concatenatedData = {};
+    concatenatedDataCellArray = {};
 
     if ~isKey(subject_number_in_data_structure, name_of_subject)
-        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
+        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
     f = fopen(CF_data(i).name,'r+');
@@ -78,10 +78,11 @@ for i=1:length(CF_data)
     %trial type
     %need to figure out how to label these columns TBTP, LightStim,
     %SoundStim, TrialType
-    concatenatedData = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
-    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
+   
+    concatenatedDataCellArray = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
+    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
     data_structure{subject_number_in_data_structure(name_of_subject)} = [data_structure{subject_number_in_data_structure(name_of_subject)};newTable];
-    output = concatenatedData;
+    output = horzcat(date,subject,data.H, data.L, data.S, data.R);
 end
 % 
 % 

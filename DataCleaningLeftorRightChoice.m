@@ -17,36 +17,52 @@ if filename ~= 0
 else
     disp('No file was selected.');
 end
+data_extracted = data{1,3}.concatenatedDataCellArray{1};
+%data_extracted(i,1) = date number
+%data_extracted(i,2) = subject ID
+%data_extracted(i,3) = H array, correct or incorrect. Odd = correct;
+%even=incorrect
+%data_extracted(i,4) = light stimulus ID
+%data_extracted(i,5) = sound stimulus ID
+%data_extracted(i,6) = trial type (1=sound; 2=light)
+%remove NaN values from the data
+data_extracted = rmmissing(data_extracted);
 
-data_extracted = data{1,1}.concatenatedDataCellArray{1};
 length_of_session = length(data_extracted);
-%array for trial by trial side choice data. sideChoice = 1, left port;
-%sideChoice = 2, right port
-
-
-%array for trial by trial stimulus choice data. stimSelected = 1, attending to sound;
-%stimSelected= 2, attending to light;
-
-data_extracted = data{1,1}.concatenatedDataCellArray{1};
-length_of_session = length(data_extracted);
-sideChoice = zeros(length_of_session, 1); % Pre-allocate sideChoice array
+%initiate phase, sideChoice, corrLight, corrSound, and stimSelected arrays
+phase = zeros(length_of_session,1);
+sideChoice = zeros(length_of_session, 1);
+corrLight = zeros(length_of_session,1);
+corrSound = zeros(length_of_session,1);
 stimSelected = zeros(length_of_session, 1);
+% LEFT IS CODED AS 0; AND RIGHT IS CODED TO BE 1
 for i = 1:length_of_session
-    % Check if trial is a sound trial
-    if isnan(data_extracted(i,3))
-        sideChoice(i) = 0; %replace 0 with empty [] 
-        stimSelected(i) = 0; %NaNs need to be removed
-    elseif  data_extracted(i,6) == 1
+    H(i) = data_extracted(i,3);
+    if H(i) == 1 || H(i) ==2 %CD
+        phase(i,1) = 0;
+    elseif H(i) == 3 || H(i) == 4 %ID1
+        phase(i,1) = 1;
+    elseif H(i) == 5 || H(i) == 6 %ED1
+        phase(i,1) = 2;
+    elseif H(i) == 7 || H(i) == 8 %ID2
+        phase(i,1) = 3;
+    elseif H(i) == 9 || H(i) == 10 %ED2
+        phase(i,1) = 4; 
+    elseif H(i) == 11 || H(i) == 12 %ID3
+        phase(i,1) = 5; 
+    end
+
+    if  data_extracted(i,6) == 1
         % Determine sideChoice based on conditions on sound trials, sideChoice of 1 is
         % LEFT; sideChoice of 2 is RIGHT
         if mod(data_extracted(i,5), 2) ~= 0 && mod(data_extracted(i,3), 2) ~= 0
-            sideChoice(i) = 1; % Left
+            sideChoice(i) = 0; % Left
         elseif mod(data_extracted(i,5), 2) ~= 0 && mod(data_extracted(i,3), 2) == 0
-            sideChoice(i) = 2; % Right
+            sideChoice(i) = 1; % Right
         elseif mod(data_extracted(i,5), 2) == 0 && mod(data_extracted(i,3), 2) ~= 0
-            sideChoice(i) = 2; % Right
+            sideChoice(i) = 1; % Right
         elseif mod(data_extracted(i,5), 2) == 0 && mod(data_extracted(i,3), 2) == 0
-            sideChoice(i) = 1; % Left
+            sideChoice(i) = 0; % Left
         end
 
         %determine the stimulus that was selected on sound trials
@@ -77,13 +93,13 @@ for i = 1:length_of_session
         % LEFT; sideChoice of 2 is RIGHT; 0 was an ommitted trial based on
         % NaN values in the H array (column 3 in data_extracted)
         if mod(data_extracted(i,4), 2) ~= 0 && mod(data_extracted(i,3), 2) ~= 0
-            sideChoice(i) = 1; % Left
+            sideChoice(i) = 0; % Left
         elseif mod(data_extracted(i,4), 2) ~= 0 && mod(data_extracted(i,3), 2) == 0
-            sideChoice(i) = 2; % Right
+            sideChoice(i) = 1; % Right
         elseif mod(data_extracted(i,4), 2) == 0 && mod(data_extracted(i,3), 2) ~= 0
-            sideChoice(i) = 2; % Right
+            sideChoice(i) = 1; % Right
         elseif mod(data_extracted(i,4), 2) == 0 && mod(data_extracted(i,3), 2) == 0
-            sideChoice(i) = 1; % Left
+            sideChoice(i) = 0; % Left
         end
 
         %On a light trial, if the response was correct, then the stimulus
@@ -109,5 +125,8 @@ for i = 1:length_of_session
     end
 end
 dataSideChoice = [data_extracted, sideChoice, stimSelected];
-output = {[data_extracted(:,1), data_extracted(:,2), sideChoice, stimSelected]};
+%output cell array contains phase, sidechoice, corrLight, corrSound
+%stim selected will be added later on (congruent vs. incongruent trial
+%analysis
+output = {[phase, sideChoice, corrLight, corrSound]};
 

@@ -7,3 +7,6 @@ phase, side chosen, light, sound
 
 make sure things are accessed correctly
 Bayesian analysis script tells the order of events for the analysis
+
+paper in the fall,
+monkey and mouse stuff in line

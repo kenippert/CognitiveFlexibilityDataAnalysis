@@ -10,3 +10,5 @@ Bayesian analysis script tells the order of events for the analysis
 
 paper in the fall,
 monkey and mouse stuff in line
+
+output needs to be a cell array with [phase, side chosen, corrlight side, corrsound side)

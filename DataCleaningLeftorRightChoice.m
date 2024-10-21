@@ -1,6 +1,9 @@
 clc
 clear
 % Open a file selection UI
+%This data cleaning file produces output for the bayesian analysis. MATLAB
+%data files originating from the JSONDataExtractforBayesianAnalysis file
+%should be used. 
 [filename, filepath] = uigetfile('*.mat', 'Select a MATLAB file');
 
 % Check if the user selected a file (filename is not 0)
@@ -128,5 +131,6 @@ dataSideChoice = [data_extracted, sideChoice, stimSelected];
 %output cell array contains phase, sidechoice, corrLight, corrSound
 %stim selected will be added later on (congruent vs. incongruent trial
 %analysis
+%this output is only for one session right now
 output = {[phase, sideChoice, corrLight, corrSound]};
 

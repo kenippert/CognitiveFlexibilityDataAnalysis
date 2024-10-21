@@ -1,6 +1,7 @@
 
-function postErrorDict = LatencyAnalysis(dictParam, key, key2)
+function [postErrorDict, sessionDict] = LatencyAnalysis(dictParam, key, key2)
     postErrorDict = dictionary();
+
     dictionaryKeys = keys(dictParam);
 
     for i = 1:numel(dictionaryKeys)
@@ -30,7 +31,7 @@ function postErrorDict = LatencyAnalysis(dictParam, key, key2)
 
                 sessionLength = numel(field);
                     % disp(k);
-                k=2;
+                sessionDict = dictionary();
                 for k = 2:sessionLength
 
                     %TRIAL BY TRIAL LATENCY FOLLOWING CORRECT AND
@@ -58,20 +59,20 @@ function postErrorDict = LatencyAnalysis(dictParam, key, key2)
                     end                
                     
                     % Calculate the average latency following correct and incorrect responses
-                    avgLatencyCorrectCD = mean(latencyArrayCorrectResponseCD,"omitmissing");
-                    avgLatencyIncorrectCD = mean(latencyArrayIncorrectResponseCD,"omitmissing");
+                    sessionLatencyCorrectCD = mean(latencyArrayCorrectResponseCD,"omitmissing");
+                    sessionLatencyIncorrectCD = mean(latencyArrayIncorrectResponseCD,"omitmissing");
 
-                    avgLatencyCorrectID1 = mean(latencyArrayCorrectResponseID1,"omitmissing");
-                    avgLatencyIncorrectID1 = mean(latencyArrayIncorrectResponseID1,"omitmissing"); 
+                    sessionLatencyCorrectID1 = mean(latencyArrayCorrectResponseID1,"omitmissing");
+                    sessionLatencyIncorrectID1 = mean(latencyArrayIncorrectResponseID1,"omitmissing"); 
 
-                    avgLatencyCorrectED1 = mean(latencyArrayCorrectResponseED1,"omitmissing");
-                    avgLatencyIncorrectED1 = mean(latencyArrayIncorrectResponseED1,"omitmissing");
+                    sessionLatencyCorrectED1 = mean(latencyArrayCorrectResponseED1,"omitmissing");
+                    sessionLatencyIncorrectED1 = mean(latencyArrayIncorrectResponseED1,"omitmissing");
 
-                    totalLatencyCorrect = [avgLatencyCorrectCD,avgLatencyCorrectID1, avgLatencyCorrectED1];
-                    totalLatencyIncorrect = [avgLatencyIncorrectCD,avgLatencyIncorrectID1, avgLatencyIncorrectED1];
+                    sessionLatencyArraysCorrect = [sessionLatencyCorrectCD,sessionLatencyCorrectID1, sessionLatencyCorrectED1];
+                    sessionLatencyArraysIncorrect = [sessionLatencyIncorrectCD,sessionLatencyIncorrectID1, sessionLatencyIncorrectED1];
 
-                    averageLatencyCorrect = mean(totalLatencyCorrect,"omitmissing");
-                    averageLatencyIncorrect = mean(totalLatencyIncorrect,"omitmissing");
+                    sessionLatencyCorrect = mean(sessionLatencyArraysCorrect,"omitmissing");
+                    sessionLatencyIncorrect = mean(sessionLatencyArraysIncorrect,"omitmissing");
 
 
                     % Store the results in the post_error_slowing
@@ -80,9 +81,10 @@ function postErrorDict = LatencyAnalysis(dictParam, key, key2)
                     %correct/incorrect condition, it means they got NONE
                     %correct or none incorret 
                     
-                    dictFields = ["LatencyCorrectResp","LatencyIncResp","CorrectLatencyCD", "IncorrectLatencyCD","CorrectLatencyID1", "IncorrectLatencyID1", ...
-                        "CorrectLatencyED1","IncorrectLatencyED1"];
-                    dictValues = [averageLatencyCorrect, averageLatencyIncorrect, avgLatencyCorrectCD, avgLatencyIncorrectCD, avgLatencyCorrectID1, avgLatencyIncorrectID1, avgLatencyCorrectED1, avgLatencyIncorrectED1]; 
+                    dictFields = ["CorrectLatency","CDCorrect Latency", "ID1CorrectLatency","ED1CorrectLatency","IncLatency", ...
+                        "IncorrectLatencyCD","IncorrectLatencyID1", "IncorrectLatencyED1"];
+                    dictValues = [sessionLatencyCorrect, sessionLatencyCorrectCD,  sessionLatencyCorrectID1, sessionLatencyCorrectED1, sessionLatencyIncorrect, ...
+                        sessionLatencyIncorrectCD,sessionLatencyIncorrectID1, sessionLatencyIncorrectED1]; 
 
                     sessionDict{j} = dictionary(dictFields, dictValues);
                     postErrorDictKeys{j} = j;
@@ -92,7 +94,7 @@ function postErrorDict = LatencyAnalysis(dictParam, key, key2)
                 end
             fprintf("Mouse " + dictionaryKeys(i) + "\n")
             fprintf("Session " + j);
-            postErrorDict{dictionaryKeys(i)} = dictionary(postErrorDictKeys{j},postErrorDictValues{j});
+            postErrorDict{dictionaryKeys(i)} = dictionary(postErrorDictKeys{j},sessionDict{j});
             disp(postErrorDict{dictionaryKeys(i)}(j));
             
             end        

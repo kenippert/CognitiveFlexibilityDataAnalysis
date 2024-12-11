@@ -1,4 +1,6 @@
-%Open JSON data files and save as structures for each mouse 
+%Open JSON data files and save as structures for each mouse and data is
+%output as nested cell array : NEED TO EDIT TO ACHIEVE THIS ONLY COPY AND
+%PASTED FROM ORIGINAL JSON DATA EXTRACT
 %folder path with JSON files that you want
 clear
 clc
@@ -56,5 +58,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('BaselineDataDREADDsCohort1LowPerformers.mat', "data_dictionary");
+save('BaselineDataCIECFCohort2.mat', "data_dictionary");
  

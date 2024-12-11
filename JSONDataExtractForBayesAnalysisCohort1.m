@@ -31,10 +31,10 @@ for i=1:length(CF_data)
     %lightStimuli = {};
     %soundStimuli = {};
     %trialTypeID = {};
-    concatenatedDataCellArray = {};
+    concatenatedData = {};
 
     if ~isKey(subject_number_in_data_structure, name_of_subject)
-        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
+        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
     f = fopen(CF_data(i).name,'r+');
@@ -69,25 +69,40 @@ for i=1:length(CF_data)
     box = {data.Box};
     timer = {data.T};
     trials = {data.I};
-    trialByTrialPerformance = {data.H}; 
+   
+    trialByTrialPerformance = {data.H};
     lightStimuli = {data.L};
     soundStimuli = {data.S};
-    trialTypeID = {data.R};
-    
+
+    rightTrials = {data.O}; %O = 1 is sound; O=2 is light
+    leftTrials = {data.J}; %J=1 is sound; J=2 is light
+    data.R = NaN(length_of_array, 1); % Initialize R with NaN
+
+    for j = 1:length_of_array
+        if (data.O(j) == 1) || (data.J(j) == 1)
+            data.R(j) = 1; % Assign 1 if either O or J is 1
+        elseif (data.O(j) == 2) || (data.J(j) == 2)
+            data.R(j) = 2; % Assign 2 if either O or J is 2
+        else 
+            data.R(j) = NaN; % Assign NaN otherwise
+        end
+    end
+
+
     %concatenate trial by trial data, light stimuli, sound stimuli, and
     %trial type
     %need to figure out how to label these columns TBTP, LightStim,
     %SoundStim, TrialType
-   
-    concatenatedDataCellArray = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
-    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
+
+    concatenatedData = {horzcat(date,subject,data.H,data.L, data.S, data.R)};
+    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
     data_structure{subject_number_in_data_structure(name_of_subject)} = [data_structure{subject_number_in_data_structure(name_of_subject)};newTable];
-    output = horzcat(date,subject,data.H, data.L, data.S, data.R);
+    output = concatenatedData;
 end
 % 
 % 
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('DREADDs2PracticeAnaBayes', "data_structure");
+save('DREADDsACCDCZInjectionsCohort1Bayes', "data_structure");
 % 

@@ -31,10 +31,10 @@ for i=1:length(CF_data)
     %lightStimuli = {};
     %soundStimuli = {};
     %trialTypeID = {};
-    concatenatedDataCellArray = {};
+    concatenatedData= {};
 
     if ~isKey(subject_number_in_data_structure, name_of_subject)
-        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
+        data_structure{ end + 1 } = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
     f = fopen(CF_data(i).name,'r+');
@@ -79,8 +79,8 @@ for i=1:length(CF_data)
     %need to figure out how to label these columns TBTP, LightStim,
     %SoundStim, TrialType
    
-    concatenatedDataCellArray = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
-    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedDataCellArray);
+    concatenatedData = {horzcat(date,subject,data.H, data.L, data.S, data.R)};
+    newTable = table(dateTable, subjectTable, box,timer,trials,concatenatedData);
     data_structure{subject_number_in_data_structure(name_of_subject)} = [data_structure{subject_number_in_data_structure(name_of_subject)};newTable];
     output = horzcat(date,subject,data.H, data.L, data.S, data.R);
 end
@@ -89,5 +89,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('DREADDs2PracticeAnaBayes', "data_structure");
+save('DREADDLowPerformersCohort2Bayes', "data_structure");
 % 

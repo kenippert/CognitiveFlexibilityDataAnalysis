@@ -19,26 +19,32 @@ for i=1:length(allOut)
         data_structure{ end + 1 } = table(dateTable, subjectTable, box, timer, trials, concatenatedData);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
-    
-    date = {allOut{i}.StartDate};
+
+    dateStr = allOut{i}.StartDate;
+    dateObj = datetime(dateStr, 'InputFormat', 'MM/dd/yy');
+    dateNum = datenum(dateObj);
+    date_fill_value = dateNum;
     length_of_array = numel(allOut{i}.H);
+    %replicate date_fill_value until it matches the length of the session,
+    %so this should result in a date value for each trial of a session in a
+    %ntrials x 1 array
+    date = repmat(date_fill_value, length_of_array, 1);
     %replicate date_fill_value until it matches the length of the session,
     %so this should result in a date value for each trial of a session in a
     %ntrials x 1 array
 
     %repeat with the subject number 
-    subject_fill_value = {allOut{i}.Subject};
+    subject_fill_value = allOut{i}.Subject;
     subject = repmat(subject_fill_value, length_of_array, 1);
     dateTable = {allOut{i}.StartDate};         
-    dateArray = repmat(date, length_of_array, 1);
     subjectTable = allOut{i}.Subject; 
     box = allOut{i}.Box;
     timer = allOut{i}.T;
     trials = allOut{i}.I;
-    trialByTrialPerformance = num2cell(allOut{i}.H');
-    lightStimuli = num2cell(allOut{i}.L');
-    soundStimuli = num2cell(allOut{i}.S');
-    trialTypeID = num2cell(allOut{i}.R');
+    trialByTrialPerformance = allOut{i}.H';
+    lightStimuli = allOut{i}.L';
+    soundStimuli = allOut{i}.S';
+    trialTypeID = allOut{i}.R';
 
     
     %concatenate trial by trial data, light stimuli, sound stimuli, and
@@ -46,7 +52,7 @@ for i=1:length(allOut)
     %need to figure out how to label these columns TBTP, LightStim,
     %SoundStim, TrialType
    
-    concatenatedData = horzcat(dateArray,subject,trialByTrialPerformance,lightStimuli,soundStimuli,trialTypeID);
+    concatenatedData = horzcat(date,subject,trialByTrialPerformance,lightStimuli,soundStimuli,trialTypeID);
     % Add session-level information to table
     newRow = table({allOut{i}.StartDate}, allOut{i}.Subject, allOut{i}.Box, allOut{i}.T, allOut{i}.I, {concatenatedData}, ...
         'VariableNames', {'dateTable', 'subjectTable', 'box', 'timer', 'trials', 'concatenatedData'});
@@ -61,5 +67,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('Testing', "data_structure");
+save('CIEFSSCFCohortsAllSetShiftingSessionsBayesPreprocessedData', "data_structure");
 % 

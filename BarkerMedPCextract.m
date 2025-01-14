@@ -1,5 +1,6 @@
 clear
 clc
+
 %import and organize every file within a selcted folder  
 datapath=uigetdir([],'Select Data Directory'); 
 d=dir(fullfile(datapath,'*.txt'));
@@ -27,9 +28,21 @@ for i=1:numel(d)
 			vec = fscanf(fid,'%*d:%f%f%f%f%f',[1,Inf]);
 			out.(fnm) = vec;
             end
-        end
+    end
+
+    end
+    if isequal(out.MSN, 'CF_SetShiftingLightV4') || ...
+        isequal(out.MSN, 'CF_SetShiftingSoundV4') || ...
+        isequal(out.MSN, 'CF_SetShiftingLightDREADDs') || ...
+        isequal(out.MSN,'CF_SetShiftingSoundDREADDs') || ...
+        isequal(out.MSN,'CF_SetShiftingLightCIEMICE') || ...
+        isequal(out.MSN,'CF_SetShiftingSoundCIEMICE')
+        Out{i} = out;%variable allOut contains structure of every subject's data
     end
 fclose(fid);
-allOut{i} = out;%variable allOut contains structure of every subject's data 
+% allOut{i} = out;
+
 end
+
+allOut = Out(~cellfun(@isempty, Out)); 
 clearvars -except allOut

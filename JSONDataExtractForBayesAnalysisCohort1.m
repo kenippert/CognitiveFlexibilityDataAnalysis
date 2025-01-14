@@ -104,5 +104,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('AllBaselineSessionsDREADDCohort1Bayes', "data_structure");
+save('BaselineSessionsCIEFSSCohort1Bayes', "data_structure");
 % 

@@ -1,41 +1,28 @@
-%This function serves to calculate variable averages across sessions for
-%whichever variable you are intereted in. For example, if you are
-%interested in latency or stage reached averages, that would be the 'key'
-%input for this function
+%This function serves to produce cell arrays of target variables where a
+%cell array for each session is nested below a cell arrayfor each subject
 
-function avgDict = SessionAverages(dictParam, key)
-    
-    avgDict = dictionary();
+
+function [allSubjectValues] = SessionAverages(dictParam, key)
+    allSubjectValues = {};
+    singleSessionValues = {};
     % gets the dictionary keys for the dictionary
     % i.e. returns [136,137,138,...]
-    dictionaryKeys = keys(dictParam);
-    % iterate througuh mouse sessions (i.e. 137,138,...)
-    for i = 1:size(dictionaryKeys)
-        % iterate through sessions per mouse (i.e. 137 session 1, 137
+    sortedKeys = containers.Map(dictParam.keys,dictParam.values);
+    dictionaryKeys = keys(sortedKeys);
+    % iterate through mice (i.e. subject 137,138,...)
+    for i = 1:length(dictionaryKeys)
+        % iterate through sessions (i.e. 137 session 1, 137
         % session 2, ...)
-        mouseArray = dictParam{dictionaryKeys(i)};
-        for j = 1:length(mouseArray)
-            % gets the average of the sectionToCalculate (i.e.
-            % TrialPerformance)
-            sessionDict = mouseArray(j);
-            sessionDict = sessionDict{1};
-
-            sessionArray = sessionDict(key);
-            sessionArray = sessionArray{1};
-            tempArray = {};
-            % first check if avgDict is initialized otherwise will error
-            if isConfigured(avgDict)
-                % then check if specific part of avgDict is initialized
-                if isKey(avgDict, dictionaryKeys(i))
-                    tempArray = avgDict{dictionaryKeys(i)};
-                end
-            end
-            % adding mean of sessionDict's session to Calculate to
-            % the end of temporary array so the index will be the same
-            tempArray{length(tempArray) + 1} = mean(...
-                sessionArray, "omitnan");
-            % add new tempArray back to its spot in avgDict
-            avgDict{dictionaryKeys(i)} = tempArray;
+        sessions = dictParam{dictionaryKeys{1,i}};
+        for j = 1:length(sessions)
+            %iterate through sessions. The "key" field value for that session is stored in a
+            %1xnumber of sessions cell array called singleSessionValues
+            singleSessionValues{j} = sessions{1,j}{key};
         end
+    %store cell array containing values from each sessions as a cell array
+    %for that animal, this is a 1xnumber of animals cell 
+    allSubjectValues{i} = singleSessionValues;
+    singleSessionValues = {};
     end
-end
+    
+ end

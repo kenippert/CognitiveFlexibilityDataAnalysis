@@ -13,12 +13,12 @@ for i=1:length(allOut)
     fields = ["Timer", "Trials", "NoInitiations", "CorrectResponses",...
         "IncorrectResponses","TrialByTrialPerformance", "TrialsToCriterion", "AttentionalSetsCompleted",...
         "MissedResponses", "LeftTrials", "RightTrials", "Latency", ...
-        "TrialbyTrialStimulus", "LightStimuli","SoundStimuli","TrialTypeIdentifier"];
+        "TrialbyTrialStimulus", "LightStimuli","SoundStimuli"];
     %groups counts output array order is 0, .... N, NaN
     values = {allOut{i}.T, allOut{i}.I, allOut{i}.N, allOut{i}.G.', ...
         allOut{i}.W.',allOut{i}.H.', groupcounts(allOut{i}.H.'), allOut{i}.V,...
         allOut{i}.M.', allOut{i}.J.', allOut{i}.O.', allOut{i}.D.', ...
-        allOut{i}.F.', allOut{i}.L.', allOut{i}.S.', allOut{i}.R.'};
+        allOut{i}.F.', allOut{i}.L.', allOut{i}.S.'};
     check_fields_values_same_dim = length(fields) == length(values);
     
     temp_dictionary = dictionary(fields, values);
@@ -38,5 +38,5 @@ end
 % How to access the mouseID dictionary and how to save the dictionary of
 % all mice across all sessions
 % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('CIEFSSCohort3Test1Just002004.mat', "data_dictionary");
+save('CIEFSSCohort1Test1.mat', "data_dictionary");
  

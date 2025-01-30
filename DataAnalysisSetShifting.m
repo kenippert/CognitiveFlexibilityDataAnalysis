@@ -13,27 +13,27 @@ else
     load(filepath);  % Loads the .mat file into workspace
 end
 
-numberSetShifts = SessionAverages(data_dictionary,"AttentionalSetsCompleted");
+numberSetShifts = SessionData(data_dictionary,"AttentionalSetsCompleted");
 fprintf("AttentionalSetsCompleted\n---------------\n");
 % printDictionaryData(numberSetShifts);
 
-numberTrials = SessionAverages(data_dictionary,"Trials");
+numberTrials = SessionData(data_dictionary,"Trials");
 % fprintf("Number of Trials By Session\n---------------\n");
 % % printDictionaryData(numberTrials);
 % 
-numberNoInitiations = SessionAverages(data_dictionary,"NoInitiations");
+numberNoInitiations = SessionData(data_dictionary,"NoInitiations");
 % fprintf("Number of No Initiations Per Session\n---------------\n");
 % % printDictionaryData(numberNoInitiations); 
 % 
-% correctResponsesByRP = AverageTTC(data_dictionary,"CorrectResponses");
+correctResponsesByRP = SessionData(data_dictionary,"CorrectResponses");
 % fprintf("Correct Responses\n---------------\nTotalCorrect " + "LeftCorrect " + "RightCorrect\n");
 % % printDictionaryData(correctResponsesByRP); 
 % 
-% incorrectResponsesByRP = AverageTTC(data_dictionary,"IncorrectResponses");
+incorrectResponsesByRP = SessionData(data_dictionary,"IncorrectResponses");
 % fprintf("Incorrect Responses\n---------------\nTotalIncorrect " + "LeftIncorrect " + "RightIncorrect\n");
 % % printDictionaryData(incorrectResponsesByRP); 
 % 
-% trialsToCriterion = AverageTTC(data_dictionary,"TrialsToCriterion");
+trialsToCriterion = SessionData(data_dictionary,"TrialsToCriterion");
 % fprintf("Trials To Criterion\n---------------\nCorrectCD " + "IncCD " + "CorrectID1 " + "IncID1 " + "CorrectED1 " + "IncED1");
 % % printDictionaryData(trialsToCriterion);
 

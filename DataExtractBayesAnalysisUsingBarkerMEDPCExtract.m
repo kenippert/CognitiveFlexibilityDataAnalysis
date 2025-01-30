@@ -1,4 +1,4 @@
-%Barker struct extract for Bayes analysis
+%This file take allOut from the Barker medpc extract and created a table containing cell arrays of data for Bayes analysis
 data_structure = {};
 subject_number_in_data_structure = containers.Map('KeyType','int32','ValueType','int32');
 %initialize list for subject numbers
@@ -67,5 +67,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('CIEFSSCFCohortsAllSetShiftingSessionsBayesPreprocessedData', "data_structure");
+save('CIEFSSCFCohort1BaselineSessionsBayesPreprocessedData', "data_structure");
 % 

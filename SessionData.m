@@ -2,7 +2,7 @@
 %cell array for each session is nested below a cell arrayfor each subject
 
 
-function [allSubjectValues] = SessionAverages(dictParam, key)
+function [allSubjectValues] = SessionData(dictParam, key)
     allSubjectValues = {};
     singleSessionValues = {};
     % gets the dictionary keys for the dictionary

@@ -41,12 +41,24 @@ for i=1:length(allOut)
     box = allOut{i}.Box;
     timer = allOut{i}.T;
     trials = allOut{i}.I;
-    trialByTrialPerformance = allOut{i}.H';
-    lightStimuli = allOut{i}.L';
-    soundStimuli = allOut{i}.S';
-    trialTypeID = allOut{i}.R';
+    trialByTrialPerformance = allOut{i}.H(1:length_of_array)';
+    lightStimuli = allOut{i}.L(1:length_of_array)';
+    soundStimuli = allOut{i}.S(1:length_of_array)';
 
-    
+    trialTypeID = NaN(length_of_array, 1); % Initialize R with NaN
+    if isfield(allOut{i}, 'R') && numel(allOut{i}.R) > 1 
+        trialTypeID = allOut{i}.R';
+    else
+        for j = 1:length_of_array
+            if (allOut{i}.O(j) == 1) || (allOut{i}.J(j) == 1)
+                trialTypeID(j) = 1; % Assign 1 if either O or J is 1
+            elseif (allOut{i}.O(j) == 2) || (allOut{i}.J(j) == 2)
+                trialTypeID(j) = 2; % Assign 2 if either O or J is 2
+            else 
+                trialTypeID(j) = NaN; % Assign NaN otherwise
+            end
+        end
+    end
     %concatenate trial by trial data, light stimuli, sound stimuli, and
     %trial type
     %need to figure out how to label these columns TBTP, LightStim,
@@ -67,5 +79,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('CIEFSSCFCohort1BaselineSessionsBayesPreprocessedData', "data_structure");
+save('CIEFSSCFCohorts1BaselineBayesPreprocessedData', "data_structure");
 % 

@@ -13,29 +13,20 @@ else
     load(filepath);  % Loads the .mat file into workspace
 end
 
-numberSetShifts = SessionData(data_dictionary,"AttentionalSetsCompleted");
-fprintf("AttentionalSetsCompleted\n---------------\n");
-% printDictionaryData(numberSetShifts);
+numberSetShifts = SessionData(data_dictionary,"AttentionalSetsCompleted", "Date","subjectID");
 
-numberTrials = SessionData(data_dictionary,"Trials");
-% fprintf("Number of Trials By Session\n---------------\n");
-% % printDictionaryData(numberTrials);
-% 
-numberNoInitiations = SessionData(data_dictionary,"NoInitiations");
-% fprintf("Number of No Initiations Per Session\n---------------\n");
-% % printDictionaryData(numberNoInitiations); 
-% 
-correctResponsesByRP = SessionData(data_dictionary,"CorrectResponses");
-% fprintf("Correct Responses\n---------------\nTotalCorrect " + "LeftCorrect " + "RightCorrect\n");
-% % printDictionaryData(correctResponsesByRP); 
-% 
-incorrectResponsesByRP = SessionData(data_dictionary,"IncorrectResponses");
-% fprintf("Incorrect Responses\n---------------\nTotalIncorrect " + "LeftIncorrect " + "RightIncorrect\n");
-% % printDictionaryData(incorrectResponsesByRP); 
-% 
-trialsToCriterion = SessionData(data_dictionary,"TrialsToCriterion");
-% fprintf("Trials To Criterion\n---------------\nCorrectCD " + "IncCD " + "CorrectID1 " + "IncID1 " + "CorrectED1 " + "IncED1");
-% % printDictionaryData(trialsToCriterion);
+
+numberTrials = SessionData(data_dictionary,"Trials", "Date", "subjectID");
+
+
+numberNoInitiations = SessionData(data_dictionary,"NoInitiations", "Date", "subjectID");
+
+
+correctResponsesByRP = SessionData(data_dictionary,"CorrectResponses", "Date", "subjectID");
+
+incorrectResponsesByRP = SessionData(data_dictionary,"IncorrectResponses", "Date", "subjectID");
+
+trialsToCriterion = SessionData(data_dictionary,"TrialsToCriterion", "Date", "subjectID");
 
 % latency = LatencyAnalysis(data_dictionary,"TrialByTrialPerformance","Latency");
 % fprintf("Latency\n---------------\n");

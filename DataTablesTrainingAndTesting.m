@@ -1,4 +1,4 @@
-
+clearvars -except allOut
 %This file take allOut from the Barker medpc extract and creates
 % a table containing data from all sessions of a given animal during
 % training and testing
@@ -25,10 +25,11 @@ for i=1:length(allOut)
     rightInc = {};
     trialByTrialData = {};
     stageReached = {};
+    omissions = {};
 
     if ~isKey(subject_number_in_data_structure, name_of_subject)
         data_structure{ end + 1 } = table(dateTable, subjectTable, box, level, ...
-            timer, stageReached, trials, totalCorrect, leftCorrect, rightCorrect, totalInc, ...
+            timer, stageReached, trials, omissions, totalCorrect, leftCorrect, rightCorrect, totalInc, ...
             leftInc, rightInc, trialByTrialData);
         subject_number_in_data_structure( name_of_subject ) = numel(data_structure);
     end
@@ -61,36 +62,7 @@ for i=1:length(allOut)
         lightStimuli = NaN(length_of_array,1);
         soundStimuli = NaN(length_of_array,1);
         trialTypeID = NaN(length_of_array,1);
-        totalCorrect = allOut{i}.C(1,1);
-        leftCorrect = allOut{i}.C(1,2);
-        rightCorrect = allOut{i}.C(1,3);
-        totalInc = NaN;
-        leftInc = NaN;
-        rightInc = NaN;
-        stageReached = NaN;
-    end
-    if contains(level, 'CF_2-1New')
-        %for level 2 (learning to nosepoke) the R array indicates left
-        %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
-        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
-        lightStimuli = NaN(length_of_array,1);
-        soundStimuli = NaN(length_of_array,1);
-        trialTypeID = NaN(length_of_array,1);
-        totalCorrect = allOut{i}.C(1,2);
-        leftCorrect = allOut{i}.C(1,3);
-        rightCorrect = allOut{i}.C(1,4);
-        totalInc = NaN;
-        leftInc = NaN;
-        rightInc = NaN;
-        stageReached = NaN;
-    end
-        if contains(level, 'CF_2-1Box7')
-        %for level 2 (learning to nosepoke) the R array indicates left
-        %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
-        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
-        lightStimuli = NaN(length_of_array,1);
-        soundStimuli = NaN(length_of_array,1);
-        trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
         totalCorrect = allOut{i}.C(1,2);
         leftCorrect = allOut{i}.C(1,3);
         rightCorrect = allOut{i}.C(1,4);
@@ -102,11 +74,76 @@ for i=1:length(allOut)
     if strcmp(level, 'CF_2-1')
         continue;
     end
-    if contains(level, 'CF_3') || contains(level, 'CF_4')
-        trialByTrialPerformance = NaN(length_of_array,1);
+    if strcmp(level, 'CF_2-1A')
+        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
         lightStimuli = NaN(length_of_array,1);
         soundStimuli = NaN(length_of_array,1);
         trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
+        totalCorrect = allOut{i}.C(1,2);
+        leftCorrect = allOut{i}.C(1,3);
+        rightCorrect = allOut{i}.C(1,4);
+        totalInc = NaN;
+        leftInc = NaN;
+        rightInc = NaN;
+        stageReached = NaN;
+    end
+
+    if strcmp(level, 'CF_2')
+        %for level 2 (learning to nosepoke) the R array indicates left
+        %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
+        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
+        lightStimuli = NaN(length_of_array,1);
+        soundStimuli = NaN(length_of_array,1);
+        trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
+        totalCorrect = allOut{i}.C(1,2);
+        leftCorrect = allOut{i}.C(1,3);
+        rightCorrect = allOut{i}.C(1,4);
+        totalInc = NaN;
+        leftInc = NaN;
+        rightInc = NaN;
+        stageReached = NaN;
+    end
+        if strcmp(level, 'CF_2-1New')
+        %for level 2 (learning to nosepoke) the R array indicates left
+        %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
+        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
+        lightStimuli = NaN(length_of_array,1);
+        soundStimuli = NaN(length_of_array,1);
+        trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
+        totalCorrect = allOut{i}.C(1,2);
+        leftCorrect = allOut{i}.C(1,3);
+        rightCorrect = allOut{i}.C(1,4);
+        totalInc = NaN;
+        leftInc = NaN;
+        rightInc = NaN;
+        stageReached = NaN;
+        end
+    if contains(level, 'CF_2-1Box7')
+        %for level 2 (learning to nosepoke) the R array indicates left
+        %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
+        trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
+        lightStimuli = NaN(length_of_array,1);
+        soundStimuli = NaN(length_of_array,1);
+        trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
+        totalCorrect = allOut{i}.C(1,2);
+        leftCorrect = allOut{i}.C(1,3);
+        rightCorrect = allOut{i}.C(1,4);
+        totalInc = NaN;
+        leftInc = NaN;
+        rightInc = NaN;
+        stageReached = NaN;
+    end
+
+    if contains(level, 'CF_3') || contains(level, 'CF_4')
+        trialByTrialPerformance = allOut{i}.P(1:length_of_array)';
+        lightStimuli = NaN(length_of_array,1);
+        soundStimuli = NaN(length_of_array,1);
+        trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
         totalCorrect = allOut{i}.G(1,1);
         leftCorrect = allOut{i}.G(1,2);
         rightCorrect = allOut{i}.G(1,3);
@@ -120,6 +157,7 @@ for i=1:length(allOut)
         lightStimuli = NaN(length_of_array,1);
         soundStimuli = NaN(length_of_array,1);
         trialTypeID = NaN(length_of_array,1);
+        omissions = allOut{i}.N;
         totalCorrect = allOut{i}.G(1,1);
         leftCorrect = allOut{i}.G(1,2);
         rightCorrect = allOut{i}.G(1,3);
@@ -133,6 +171,7 @@ for i=1:length(allOut)
         trialByTrialPerformance = allOut{i}.H(1:length_of_array)';
         lightStimuli = allOut{i}.L(1:length_of_array)';
         soundStimuli = allOut{i}.S(1:length_of_array)';
+        omissions = allOut{i}.N;
         totalCorrect = allOut{i}.G(1,1);
         leftCorrect = allOut{i}.G(1,2);
         rightCorrect = allOut{i}.G(1,3);
@@ -164,22 +203,36 @@ for i=1:length(allOut)
         soundStimuli,trialTypeID);
     % Add session-level information to table
     newRow = table({allOut{i}.StartDate}, allOut{i}.Subject, allOut{i}.Box, ...
-        {level}, allOut{i}.T, stageReached, allOut{i}.I, totalCorrect, leftCorrect, ...
+        {level}, allOut{i}.T, stageReached, allOut{i}.I, omissions, totalCorrect, leftCorrect, ...
         rightCorrect, totalInc, leftInc, rightInc, {trialByTrialData}, ...
         'VariableNames', {'dateTable', 'subjectTable', 'box', 'level','timer', ...
-        'stageReached','trials','totalCorrect','leftCorrect', 'rightCorrect', ...
+        'stageReached','trials','omissions','totalCorrect','leftCorrect', 'rightCorrect', ...
         'totalInc','leftInc', 'rightInc', 'trialByTrialData'});
-    newRow2 = table(allOut{i}.Subject);
-
     % Append to the subject-specific table
     subjectIndex = subject_number_in_data_structure(name_of_subject);
     data_structure{subjectIndex} = [data_structure{subjectIndex}; newRow];
     % output = horzcat(date,subject,data.H, data.L, data.S, data.R);
+    % Extract subject numbers and sort in descending order
+    % subject_numbers = cell2mat(keys(subject_number_in_data_structure));
+    % sorted_subject_numbers = sort(subject_numbers, 'descend');
+    % 
+    % % Initialize a new cell array for sorted data
+    % sorted_data_structure = cell(size(data_structure));
+    % 
+    % % Reorder data_structure based on sorted subject numbers
+    % for j = 1:length(sorted_subject_numbers)
+    %     subject_num = sorted_subject_numbers(j);
+    %     subject_index = subject_number_in_data_structure(subject_num);
+    %     sorted_data_structure{j} = data_structure{subject_index};
+    % end
+    % 
+    % % Update data_structure with the sorted data
+    % data_structure = sorted_data_structure;
 end
 % 
 % 
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('HomecageEtOHPreprocessedData', "data_structure");
+save('testingTable', "data_structure");
 % 

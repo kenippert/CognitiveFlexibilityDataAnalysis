@@ -55,7 +55,7 @@ for i=1:length(allOut)
             elseif (allOut{i}.O(j) == 2) || (allOut{i}.J(j) == 2)
                 trialTypeID(j) = 2; % Assign 2 if either O or J is 2
             else 
-                trialTypeID(j) = NaN; % Assign NaN otherwise
+                trialTypeID(j) = NaN; s% Assign NaN otherwise
             end
         end
     end
@@ -79,5 +79,5 @@ end
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('CIEFSSCFCohort1Test2SessionsBayesPreprocessedData', "data_structure");
+save('Baseline6of8NaiveAnimalsSessionsBayesPreprocessedData', "data_structure");
 % 

@@ -10,7 +10,6 @@ subject_number_list = [];
 %figure out how to get dat as field 1
 for i=1:length(allOut)
     name_of_subject = allOut{i}.Subject;
-    
     dateTable = {};
     subjectTable = {};
     box = {};
@@ -105,7 +104,7 @@ for i=1:length(allOut)
         rightInc = NaN;
         stageReached = NaN;
     end
-        if strcmp(level, 'CF_2-1New')
+    if strcmp(level, 'CF_2-1New')
         %for level 2 (learning to nosepoke) the R array indicates left
         %(R=1) and right (R=2) trials. Zeros are trials with no initiation.
         trialByTrialPerformance = allOut{i}.R(1:length_of_array)';
@@ -194,6 +193,14 @@ for i=1:length(allOut)
             end
         end
     end
+
+    if strcmp(level, 'LF_BLINK_0')
+
+    end
+     
+
+    end
+
     %concatenate trial by trial data, light stimuli, sound stimuli, and
     %trial type
     %need to figure out how to label these columns TBTP, LightStim,
@@ -201,7 +208,7 @@ for i=1:length(allOut)
    
     trialByTrialData = horzcat(trialByTrialPerformance,lightStimuli, ...
         soundStimuli,trialTypeID);
-    % Add session-level information to table
+    %% Add session-level information to table for cognitive flexibility task
     newRow = table({allOut{i}.StartDate}, allOut{i}.Subject, allOut{i}.Box, ...
         {level}, allOut{i}.T, stageReached, allOut{i}.I, omissions, totalCorrect, leftCorrect, ...
         rightCorrect, totalInc, leftInc, rightInc, {trialByTrialData}, ...
@@ -211,6 +218,21 @@ for i=1:length(allOut)
     % Append to the subject-specific table
     subjectIndex = subject_number_in_data_structure(name_of_subject);
     data_structure{subjectIndex} = [data_structure{subjectIndex}; newRow];
+
+    %% Add session-level information to table for mouse cognitive effort
+    % task (date, subject, timer, level, number of trials, total rewards
+    % collected, rewards collected left, collected right)
+    newRowMCET = table({allOut{i}.StartDate}, allOut{i}.Subject, allOut{i}.Box, ...
+        {level}, allOut{i}.T, allOut{i}.I, omissions, totalCorrect, leftCorrect, ...
+        rightCorrect, totalInc, leftInc, rightInc, {trialByTrialData}, ...
+        'VariableNames', {'dateTable', 'subjectTable', 'box', 'level','timer', ...
+        'trials','omissions','totalCorrect','leftCorrect', 'rightCorrect', ...
+        'totalInc','leftInc', 'rightInc', 'trialByTrialData'});
+    % Append to the subject-specific table
+    subjectIndex = subject_number_in_data_structure(name_of_subject);
+    data_structure{subjectIndex} = [data_structure{subjectIndex}; newRow];
+
+
     % output = horzcat(date,subject,data.H, data.L, data.S, data.R);
     % Extract subject numbers and sort in descending order
     % subject_numbers = cell2mat(keys(subject_number_in_data_structure));

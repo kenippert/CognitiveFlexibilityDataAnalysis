@@ -2,7 +2,7 @@
 %cell array for each session is nested below a cell arrayfor each subject
 
 
-function [allSubjectValues] = SessionData(dictParam, key, key2, key3)
+function allSubjectValues = SessionData(dictParam, key, key2, key3)
     allSubjectValues = {};
     singleSessionValues = {};
     dateArray = {};

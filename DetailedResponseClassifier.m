@@ -15,6 +15,7 @@ function  trialTypeDict = DetailedResponseClassifier(dictParam, key, key2, key3,
             sessionDict = dictionary();
             
             for j = 1:numberOfSessions
+                CorrectLight = 0; IncLight = 0; CorrectSound = 0; IncSound = 0;
                 CorrectSoundCD = 0; IncSoundCD = 0;CorrectLightCD = 0;IncLightCD = 0;
                 CorrectSoundID1 = 0; IncSoundID1 = 0; CorrectLightID1 = 0;IncLightID1 = 0;
                 CorrectSoundED1 = 0; IncSoundED1 = 0;CorrectLightED1 = 0;IncLightED1 = 0;
@@ -46,16 +47,6 @@ function  trialTypeDict = DetailedResponseClassifier(dictParam, key, key2, key3,
                 sessionLength = fieldDimensions(2);
                     % disp(k);
                 for k = 1:sessionLength
-                    % if mod(field(k),2) == 0 && (field2(k) == 2 || field3(k) == 2)
-                    %     IncLight = IncLight + 1;
-                    % elseif mod(field(k),2) ~= 0 && (field2(k) == 2 || field3(k) == 2)
-                    %     CorrectLight = CorrectLight + 1;
-                    % elseif mod(field(k),2) == 0 && (field2(k) == 1 || field3(k) == 1)
-                    %     IncSound = IncSound + 1;
-                    % elseif mod(field(k),2) ~= 0 && (field2(k) == 1 || field3(k) == 1)
-                    %     CorrectSound = CorrectSound + 1;
-                    % end
-                    
                     %TRIAL BY TRIAL PERFORMANCE BY TYPE OF SHIFT/ATTENTIONAL SET
                     %Compound discrimination light versus sound trials
                     if field(k) == 1 && (field2(k) == 2 || field3(k) == 2)
@@ -112,8 +103,6 @@ function  trialTypeDict = DetailedResponseClassifier(dictParam, key, key2, key3,
                     IncLight = IncLightED2 + IncLightID2 + IncLightED1 + IncLightID1 + IncLightCD; 
                     CorrectSound = CorrectSoundED2 + CorrectSoundID2 + CorrectSoundED1 + CorrectSoundID1 + CorrectSoundCD;
                     IncSound = IncSoundED2 + IncSoundID2 + IncSoundED1 + IncSoundID1 + IncSoundCD;
-
-
 
                     %if trial performance is non NaN & an odd number AND it
                     %is a left or right trial light trial (O or J =2) and

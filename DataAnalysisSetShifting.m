@@ -12,24 +12,29 @@ else
     disp(['Loading file: ', filepath]);
     load(filepath);  % Loads the .mat file into workspace
 end
+%% old 
+% %%%Testing Data
+% numberSetShifts = SessionData(data_dictionary,"AttentionalSetsCompleted", "Date","subjectID");
+% 
+% 
+% numberTrials = SessionData(data_dictionary,"Trials", "Date", "subjectID");
+% ssss
+% 
+% numberNoInitiations = SessionData(data_dictionary,"NoInitiations", "Date", "subjectID");
+% 
+% 
+% correctResponsesByRP = SessionData(data_dictionary,"CorrectResponses", "Date", "subjectID");
+% 
+% incorrectResponsesByRP = SessionData(data_dictionary,"IncorrectResponses", "Date", "subjectID");
+% 
+% strialsToCriterion = SessionData(data_dictionary,"TrialsToCriterion", "Date", "subjectID");
+% 
+% % latency = LatencyAnalysis(data_dictionary,"TrialByTrialPerformance","Latency");
+% % fprintf("Latency\n---------------\n");
 
-%%%Testing Data
-numberSetShifts = SessionData(data_dictionary,"AttentionalSetsCompleted", "Date","subjectID");
-
-
-numberTrials = SessionData(data_dictionary,"Trials", "Date", "subjectID");
-
-
-numberNoInitiations = SessionData(data_dictionary,"NoInitiations", "Date", "subjectID");
-
-
-correctResponsesByRP = SessionData(data_dictionary,"CorrectResponses", "Date", "subjectID");
-
-incorrectResponsesByRP = SessionData(data_dictionary,"IncorrectResponses", "Date", "subjectID");
-
-trialsToCriterion = SessionData(data_dictionary,"TrialsToCriterion", "Date", "subjectID");
-
-% latency = LatencyAnalysis(data_dictionary,"TrialByTrialPerformance","Latency");
-% fprintf("Latency\n---------------\n");
-
-% TBTP = DetailedResponseClassifier(data_dictionary,"TrialByTrialPerformance","LeftTrials", "RightTrials", "LightStimuli", "SoundStimuli");
+%% Current
+TBTP = ResponseClassifier(data_dictionary,"TrialByTrialPerformance","LeftTrials", "RightTrials", "LightStimuli", "SoundStimuli");
+% 
+sessionLevelData = SessionDataExcel(data_dictionary, "Date","subjectID",...
+    "AttentionalSetsCompleted","Trials","NoInitiations", "CorrectResponses","IncorrectResponses",...
+    "TrialsToCriterion");

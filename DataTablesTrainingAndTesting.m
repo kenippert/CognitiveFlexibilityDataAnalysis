@@ -2,10 +2,16 @@
 %This file take allOut from the Barker medpc extract and creates
 % a table containing data from all sessions of a given animal during
 % training and testing
+load(uigetfile,'allOut');
 data_structure = {};
-subject_number_in_data_structure = containers.Map('KeyType','int32','ValueType','int32');
+try
+    subject_number_in_data_structure = containers.Map('KeyType','int32','ValueType','int32');
+catch exception
+    
+end
 %initialize list for subject numbers
 subject_number_list = [];
+
 
 %figure out how to get dat as field 1
 for i=1:length(allOut)
@@ -64,17 +70,33 @@ for i=1:length(allOut)
 %% Extract data from level 1 sessions
     levelOneStrings = ["CF_1-1New","CF_1", "CF_1-1Box7"];
     if contains(level, levelOneStrings)
-        trialByTrialPerformance = NaN(length_of_array,1);
-        lightStimuli = NaN(length_of_array,1);
-        soundStimuli = NaN(length_of_array,1);
-        trialTypeID = NaN(length_of_array,1);
-        totalCorrect = allOut{i}.C(1,1);
-        leftCorrect = allOut{i}.C(1,2);
-        rightCorrect = allOut{i}.C(1,3);
-        totalInc = NaN;
-        leftInc = NaN;
-        rightInc = NaN;
-        stageReached = NaN;
+        try
+            trialByTrialPerformance = NaN(length_of_array,1);
+            lightStimuli = NaN(length_of_array,1);
+            soundStimuli = NaN(length_of_array,1);
+            trialTypeID = NaN(length_of_array,1);
+            totalCorrect = allOut{i}.C(1,1);
+            leftCorrect = allOut{i}.C(1,2);
+            rightCorrect = allOut{i}.C(1,3);
+            totalInc = NaN;
+            leftInc = NaN;
+            rightInc = NaN;
+            stageReached = NaN;
+        catch exception
+            disp('Warning, %s level not compatible', out.MSN{i})
+            trialByTrialPerformance = NaN(length_of_array,1);
+            lightStimuli = NaN(length_of_array,1);
+            soundStimuli = NaN(length_of_array,1);
+            trialTypeID = NaN(length_of_array,1);
+            totalCorrect = NaN;
+            leftCorrect = NaN;
+            rightCorrect = NaN;
+            totalInc = NaN;
+            leftInc = NaN;
+            rightInc = NaN;
+            stageReached = NaN;
+        end
+
     end
 %% Extract data from Level 2 sessions
     levelTwoStrings = ["CF_2-1","CF_2-1Box7"];

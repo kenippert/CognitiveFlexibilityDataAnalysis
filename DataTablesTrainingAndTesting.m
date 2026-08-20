@@ -1,13 +1,13 @@
 
 %This file take allOut from the Barker medpc extract and creates
 % a table containing data from all sessions of a given animal during
-% training and testing
-load(uigetfile,'allOut');
+% % training and testing
+% load(uigetfile,'allOut');
 data_structure = {};
 try
     subject_number_in_data_structure = containers.Map('KeyType','int32','ValueType','int32');
 catch exception
-    
+
 end
 %initialize list for subject numbers
 subject_number_list = [];
@@ -16,7 +16,18 @@ subject_number_list = [];
 %figure out how to get dat as field 1
 for i=1:length(allOut)
     name_of_subject = allOut{i}.Subject;
-    
+    if ~isnumeric(name_of_subject)
+        if ischar(name_of_subject) || isstring(name_of_subject)
+            val = str2double(name_of_subject);
+            if isnan(val)
+                continue
+            else
+                name_of_subject = val;
+            end
+        else
+            continue
+        end
+    end
     dateTable = {};
     subjectTable = {};
     box = {};
@@ -55,6 +66,18 @@ for i=1:length(allOut)
     %repeat with the subject number 
     subject_fill_value = allOut{i}.Subject;
     subject = repmat(subject_fill_value, length_of_array, 1);
+    if ~isnumeric(subject)
+        if ischar(subject) || isstring(subject)
+            val = str2double(subject);
+            if isnan(val)
+                continue
+            else
+                subject = val;
+            end
+        else
+            continue
+        end
+    end
     dateTable = {allOut{i}.StartDate};         
     subjectTable = allOut{i}.Subject; 
     box = allOut{i}.Box;
@@ -147,6 +170,58 @@ for i=1:length(allOut)
     end
 %% Extract data from set shifting levels
     if contains(level, 'CF_SetShifting')
+        trialByTrialPerformance = allOut{i}.H(1:length_of_array)';
+        lightStimuli = allOut{i}.L(1:length_of_array)';
+        soundStimuli = allOut{i}.S(1:length_of_array)';
+        totalCorrect = allOut{i}.G(1,1);
+        leftCorrect = allOut{i}.G(1,2);
+        rightCorrect = allOut{i}.G(1,3);
+        totalInc = allOut{i}.W(1,1);
+        leftInc = allOut{i}.W(1,2);
+        rightInc = allOut{i}.W(1,3);
+        stageReached = allOut{i}.V;
+        trialTypeID = NaN(length_of_array, 1); % Initialize R with NaN
+        if isfield(allOut{i}, 'R') && numel(allOut{i}.R) > 1 
+            trialTypeID = allOut{i}.R';
+        else
+            for j = 1:length_of_array
+                if (allOut{i}.O(j) == 1) || (allOut{i}.J(j) == 1)
+                    trialTypeID(j) = 1; % Assign 1 if either O or J is 1
+                elseif (allOut{i}.O(j) == 2) || (allOut{i}.J(j) == 2)
+                    trialTypeID(j) = 2; % Assign 2 if either O or J is 2
+                else 
+                    trialTypeID(j) = NaN; % Assign NaN otherwise
+                end
+            end
+        end
+    end
+    if contains(level, 'CF_SetShift')
+        trialByTrialPerformance = allOut{i}.H(1:length_of_array)';
+        lightStimuli = allOut{i}.L(1:length_of_array)';
+        soundStimuli = allOut{i}.S(1:length_of_array)';
+        totalCorrect = allOut{i}.G(1,1);
+        leftCorrect = allOut{i}.G(1,2);
+        rightCorrect = allOut{i}.G(1,3);
+        totalInc = allOut{i}.W(1,1);
+        leftInc = allOut{i}.W(1,2);
+        rightInc = allOut{i}.W(1,3);
+        stageReached = allOut{i}.V;
+        trialTypeID = NaN(length_of_array, 1); % Initialize R with NaN
+        if isfield(allOut{i}, 'R') && numel(allOut{i}.R) > 1 
+            trialTypeID = allOut{i}.R';
+        else
+            for j = 1:length_of_array
+                if (allOut{i}.O(j) == 1) || (allOut{i}.J(j) == 1)
+                    trialTypeID(j) = 1; % Assign 1 if either O or J is 1
+                elseif (allOut{i}.O(j) == 2) || (allOut{i}.J(j) == 2)
+                    trialTypeID(j) = 2; % Assign 2 if either O or J is 2
+                else 
+                    trialTypeID(j) = NaN; % Assign NaN otherwise
+                end
+            end
+        end
+    end
+    if contains(level, 'SetShift')
         trialByTrialPerformance = allOut{i}.H(1:length_of_array)';
         lightStimuli = allOut{i}.L(1:length_of_array)';
         soundStimuli = allOut{i}.S(1:length_of_array)';
@@ -315,5 +390,5 @@ writetable(summary_table, filename, 'Sheet', 'Summary');
 % % How to access the mouseID dictionary and how to save the dictionary of
 % % all mice across all sessions
 % % subject_list = data_dictionary{136}; % [session 1, session 2, ...]
-save('CIEFSSCohort1AcuteWithdrawalSessions', "data_structure");
+save('AllSetShiftingSessions', "data_structure");
 % 

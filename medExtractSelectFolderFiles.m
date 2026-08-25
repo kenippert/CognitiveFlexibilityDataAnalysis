@@ -335,4 +335,3 @@ fprintf('\n============================================\n');
 %% Keep useful variables
 
 clearvars -except allOut addedFiles skippedFiles skipReasons files datapath
-save("behaviorComputerAllOutBackup2026.

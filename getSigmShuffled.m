@@ -26,7 +26,7 @@
 %   LIlike_sh{session}{bootstrap}  - light likelihoods
 function [SPlike_sh, SOlike_sh, LIlike_sh] = getSigmShuffled(outpt, XZ, Phases, trialsperphase, sz, binsz, bootstraps)
 
-    sessions_to_shuffle = [1 2 3]; %specific sessions to run shuffle on (could generate random sessions here, probably would be better)
+    sessions_to_shuffle = [1 2]; %specific sessions to run shuffle on (could generate random sessions here, probably would be better)
     nSessions = length(sz{1,XZ});
 
     SPlike_sh  = cell(1,nSessions);
@@ -125,8 +125,8 @@ function [SPlike_sh, SOlike_sh, LIlike_sh] = getSigmShuffled(outpt, XZ, Phases, 
 
             %Run sigmoidal function for likelihood values, adjusting on the basis of
             %how many consecutive choices have been made
-            % SigmSP = 0.5+((1./(1+exp(-1.75*(Sp-3))))./2); %6/8 criterion
-            SigmSP = 0.5+((1./(1+exp(-1.5*(Sp-3.5))))./2); %7/9 criterion
+            SigmSP = 0.5+((1./(1+exp(-1.75*(Sp-3))))./2); %6/8 criterion
+            % SigmSP = 0.5+((1./(1+exp(-1.5*(Sp-3.5))))./2); %7/9 criterion
        
             SigmSP = SigmSP.';
 
@@ -181,8 +181,8 @@ function [SPlike_sh, SOlike_sh, LIlike_sh] = getSigmShuffled(outpt, XZ, Phases, 
             cssh   = arrayfun(@(a) cumsum(socons(ish==a)), 1:ish(end), 'un', 0);
             So     = cat(2,cssh{:});
 
-            % SigmSO = 0.5+((1./(1+exp(-1.75*(So-3))))./2); %6/8 criterion
-            SigmSO = 0.5+((1./(1+exp(-1.5*(So-3.5))))./2); %7/9 criterion
+            SigmSO = 0.5+((1./(1+exp(-1.75*(So-3))))./2); %6/8 criterion
+            % SigmSO = 0.5+((1./(1+exp(-1.5*(So-3.5))))./2); %7/9 criterion
             SigmSO = SigmSO.';
 
             for k = 2:SL
@@ -207,8 +207,8 @@ function [SPlike_sh, SOlike_sh, LIlike_sh] = getSigmShuffled(outpt, XZ, Phases, 
             csli   = arrayfun(@(a) cumsum(licons(ili==a)), 1:ili(end), 'un', 0);
             Li     = cat(2,csli{:});
 
-            % SigmLi = 0.5+((1./(1+exp(-1.75*(Li-3))))./2); %6/8 criterion
-            SigmLi = 0.5+((1./(1+exp(-1.5*(Li-3.5))))./2); %7/9 criterion
+            SigmLi = 0.5+((1./(1+exp(-1.75*(Li-3))))./2); %6/8 criterion
+            % SigmLi = 0.5+((1./(1+exp(-1.5*(Li-3.5))))./2); %7/9 criterion
 
             SigmLi = SigmLi.';
             for k = 2:SL

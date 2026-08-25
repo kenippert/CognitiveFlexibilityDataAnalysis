@@ -23,12 +23,68 @@ end
 %% Run preprocessing to generate phase, side, light, and sound data
 for XY = 1:length(data)
     x = data{1,XY}; %iterates through each animal's data - sessions are iterated within the MouseGetBayes function
-    [outpt{XY},sz{XY},sessions{XY}, GT{XY}] = MouseGetBayes(x); %generates nested cell array: array of subjects.array of individual sessions
+    [outpt{XY},sz{XY},sessions{XY}] = MouseGetBayes(x); %generates nested cell array: array of subjects.array of individual sessions
+end
+
+%% Remove sessions MouseGetBayes skipped (empty outpt entries) BEFORE analysis
+% A session MouseGetBayes couldn't process (wrong dimensions, all-NaN, or an
+% error) comes back as outpt{XY}{k} = []. If that lands in the first slot it
+% breaks the Var1 identification in MouseGetSigm. Strip empties here so no
+% downstream function (MouseGetSigm, getSigmShuffled, ...) ever sees a blank.
+for XY = 1:length(data)
+    keep = ~cellfun(@isempty, outpt{XY});   % skipped sessions are []
+    if ~all(keep)
+        firstKeep = find(keep, 1, 'first');
+        if isempty(firstKeep)
+            subjLabel = sprintf('(index %d)', XY);
+        else
+            subjLabel = sprintf('%d', outpt{XY}{1,firstKeep}{1,6});
+        end
+        fprintf('Subject %s: removing %d empty session(s) from outpt before analysis\n', ...
+                subjLabel, nnz(~keep));
+    end
+    outpt{XY}    = outpt{XY}(keep);
+    sz{XY}       = sz{XY}(keep);
+    sessions{XY} = nnz(keep);
 end
 
 %% Run likelihood and analysis functions - REAL (non-shuffled) data
 for XZ = 1:length(data)
     [Sessionlength{XZ}, SPlike{XZ}, LIlike{XZ}, SOlike{XZ}, Phases{XZ}, trialsperphase{XZ}] = MouseGetSigm(outpt,sz,XZ,sessions);
+
+    % ---- Drop blank sessions (skipped by MouseGetBayes/MouseGetSigm) ----
+    % Skipped sessions come back as [] in the MouseGetSigm outputs. Remove
+    % them from EVERY parallel per-session array so indexing stays aligned,
+    % then update the session count used as the loop bound downstream.
+    valid = ~cellfun(@isempty, SPlike{XZ});   % blank sessions have [] here
+
+    if ~all(valid)
+        firstValid = find(valid, 1, 'first');
+        if isempty(firstValid)
+            subjLabel = sprintf('(index %d)', XZ);
+        else
+            subjLabel = sprintf('%d', outpt{XZ}{1,firstValid}{1,6});
+        end
+        fprintf('Subject %s: dropping %d blank session(s) of %d\n', ...
+                subjLabel, nnz(~valid), numel(valid));
+    end
+
+    Sessionlength{XZ}  = Sessionlength{XZ}(valid);
+    SPlike{XZ}         = SPlike{XZ}(valid);
+    LIlike{XZ}         = LIlike{XZ}(valid);
+    SOlike{XZ}         = SOlike{XZ}(valid);
+    Phases{XZ}         = Phases{XZ}(valid);
+    trialsperphase{XZ} = trialsperphase{XZ}(valid);
+    outpt{XZ}          = outpt{XZ}(valid);
+    sz{XZ}             = sz{XZ}(valid);
+    sessions{XZ}       = nnz(valid);
+
+    % ---- If nothing valid remains, skip this subject entirely ----
+    if sessions{XZ} == 0
+        warning('Subject index %d has no valid sessions; skipping.', XZ);
+        continue
+    end
+
     [normSP{XZ}, normLI{XZ}, normSO{XZ}, propSP{XZ}, propLI{XZ}, propSO{XZ}, propNoStrat{XZ}] = MouseAnaBayes(XZ,Sessionlength, SPlike,LIlike, SOlike, Phases, sessions);
 end
 
@@ -36,29 +92,55 @@ end
 binsz = 2;
 bootstraps = 100;
 for XZ = 1:length(data)
+    if sessions{XZ} == 0 || isempty(outpt{XZ})   % subject had no valid sessions
+        continue
+    end
     [SPlike_sh{XZ}, SOlike_sh{XZ}, LIlike_sh{XZ}] = getSigmShuffled(outpt, XZ, Phases, trialsperphase, sz, binsz, bootstraps);
     [normSP_sh{XZ}, normLI_sh{XZ}, normSO_sh{XZ}, propSP_sh{XZ}, propLI_sh{XZ}, propSO_sh{XZ}, propNoStrat_sh{XZ}] = anaBayesShuffled(XZ, Sessionlength, SPlike_sh, LIlike_sh, SOlike_sh, Phases, sessions, bootstraps);
 end
+
+%% BAYES EXCEL FUNCTION. RAW PROPORTION DATA IS EXPORTED TO EXCEL ALONG WITH THE DATE AND THE NUMBER OF PHASES COMPLETED IN THAT SESSION. 
+% Define the prompt and dialog title
+prompt = {'Enter the Excel filename (without extension):'};
+dlgtitle = 'Filename Input';
+dims = [1 50];
+definput = {'my_excel_file'};
+
+% Open the input dialog box
+answer = inputdlg(prompt, dlgtitle, dims, definput);
+
+% Check if the user clicked OK and append the extension
+if ~isempty(answer)
+    filename = [answer{1}, '.xlsx'];
+    
+    % Example: Save a blank table to create the file
+    % t = table();
+    % writetable(t, filename);
+else
+    disp('User canceled the operation.');
+end
+
+bayesGetExcel(propSP, propLI, propSO, propNoStrat, outpt, filename);
 
 %% Graphing raw data (REAL data only, as before - see note at bottom on extending to shuffled)
 %import matlab report generator powerpoint functionality
 import mlreportgen.ppt.*
 %Name of powerpoint containing Bayes posterior graphs for each session for
 %each subject
-filename = 'testing.pptx';
-filename2 = 'testingShuffled.pptx';
+filename = 'PosteriorPlotsAllShiftingSessions.pptx';
+% filename2 = 'estingShuffled.pptx';
 
 %Name of powerpoint containing summary proportion graphs for each subject
-filename3 = 'testingProportionsplots7of9.pptx';
+filename3 = 'proportionStrategyPlotsALlSession6of8Sigmoidal.pptx';
 
 %create one powerpoint presentation object called ppt for Bayes graphs
-ppt = Presentation(filename);
-ppt2 = Presentation(filename2);
+% ppt = Presentation(filename);
+% ppt2 = Presentation(filename2);
 ppt3 = Presentation(filename3);
 %open the powerpoint
 % open(ppt);
 % open(ppt2);
-% 
+
 % for XZZ = 1:length(data)
 %     MousePltBayes(normSP,normLI,normSO,Phases,XZZ, outpt, sessions, ppt);
 %     MousePltBayesShuffled(normSP,normLI,normSO, normSP_sh,normLI_sh,normSO_sh,Phases,XZZ, outpt, sessions, ppt2)
@@ -69,11 +151,14 @@ ppt3 = Presentation(filename3);
 % graphs
 open(ppt3);
 titleSlide = add(ppt3, 'Title Slide');
-titleText = "testingProportionPlotsNormandShuff";
+titleText = "acrossSessionProportionPlotsNormandShuff";
 replace(titleSlide, 'Title', titleText);
 % 
 
 for XZ = 1:length(data)
+    if sessions{XZ} == 0 || isempty(outpt{XZ})   % subject had no valid sessions
+        continue
+    end
     import mlreportgen.ppt.*
     figure;
     mouse = [cell2mat(propSP{1,XZ});cell2mat(propLI{1,XZ});cell2mat(propSO{1,XZ})];
